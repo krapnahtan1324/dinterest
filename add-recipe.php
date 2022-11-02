@@ -2,6 +2,7 @@
 require("connect-db.php");
 require("recipe-db.php");
 
+$list_of_recipes = getAllRecipes();
 $recipe_to_update = null; 
 ?> 
 
@@ -14,29 +15,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
   if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Add') // if btnAction was clicked, it won't be empty and will have a value 
     // $_POST['btnAction] == 'Add' makes sure it's an actual Add value 
     {
-      addRecipe($_POST['recipe_id'], $_POST['name'], $_POST['instructions']); // 3 input boxes; first is name, then major, then year 
+      addRecipe($_POST['recipe_id'], $_POST['recipe_name'], $_POST['instructions']); // 3 input boxes; first is name, then major, then year 
         // Grabbing the inforamtion that we want to save 
         // Won't add anything yet because we haven't written any SQL 
-      //$list_of_friends = getAllFriends(); // Once you add the new friend, retrieve the table again 
-        // to display all the friends plus the newly submitted one 
+      //$list_of_recipes = getAllrecipes(); // Once you add the new recipe, retrieve the table again 
+        // to display all the recipes plus the newly submitted one 
     }
     // If you plan on having a lot of commands, separate SQL into a separate file 
     else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Update')
     {
-      $friend_to_update = getFriendByName($_POST['friend_to_update']); 
+      $recipe_to_update = getrecipeByName($_POST['recipe_to_update']); 
     }
     else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Confirm update') // Making sure there's actually something 
     // to update 
     {
-      updateFriend($_POST['name'], $_POST['major'], $_POST['year']);
+      updaterecipe($_POST['recipe_name'], $_POST['major'], $_POST['year']);
       // Extract the information from the input boxes and pass it into the function
-      $list_of_friends = getAllFriends(); // SELECT * from the table and display the info again
+      $list_of_recipes = getAllrecipes(); // SELECT * from the table and display the info again
     }
     else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Delete') 
     {
-      deleteFriend($_POST['friend_to_delete']);
+      deleterecipe($_POST['recipe_to_delete']);
       // Extract the information from the input boxes and pass it into the function
-      $list_of_friends = getAllFriends(); // SELECT * from the table and display the info again
+      $list_of_recipes = getAllrecipes(); // SELECT * from the table and display the info again
     }
 }
 ?>
@@ -123,7 +124,7 @@ method: Allows yout to specify how the form data should be packaged
     <input type="text" class="form-control" name="name" required 
       value="<?php if ($recipe_to_update
      != null) echo $recipe_to_update
-    ['name'] ?>"
+    ['recipe_name'] ?>"
     />  
     <!-- 
     name = "name": Give the name some name so you can refer to it later 
@@ -142,16 +143,60 @@ method: Allows yout to specify how the form data should be packaged
 
   <div>
     <input type="submit" value="Add" name="btnAction" class="btn btn-dark"
-        title="Insert a friend into a friend table" /> <!-- Create a submit button 
+        title="Insert a recipe into a recipe table" /> <!-- Create a submit button 
     value is used as the text that appears on the button 
     class is using a btn bootstrap
     btn-dark: Display it like a button but make it dark
     title: Allows you to pass in some string to be used as a hint - can be used for accessibility -->
     <input type="submit" value="Confirm update" name="btnAction" class="btn btn-primary"
-        title="Update this friend" /> <!-- Create a submit button --> 
+        title="Update this recipe" /> <!-- Create a submit button --> 
 </div>
     
 </form>
+
+<hr/> <!-- Horizontal --> 
+<h3> List of Recipes</h3> 
+<div class="row justify-content-center">  
+<table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
+  <thead> <!-- For the table set up the header --> 
+  <tr style="background-color:#B0B0B0">
+    <th width="30%"><b>Recipe_id</b></th>       
+    <th width="30%"><b>Name</b></th>      
+    <th width="30%"><b>Instructions</b></th>
+    <th><b>Update?</b></th>
+    <th><b>Delete?</b></th>
+  </tr>
+  </thead>
+<?php foreach ($list_of_recipes as $recipe_info): ?> <!-- Call each row as recipe_info -->
+  <tr> 
+     <td><?php echo $recipe_info['recipe_id']; ?></td>
+     <td><?php echo $recipe_info['recipe_name']; ?></td>        
+     <td><?php echo $recipe_info['instructions']; ?></td>  
+     <td>
+      <form action="helloworld.php" method="post">
+     <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
+      <input type="submit" value="Update" name="btnAction" class="btn btn-primary"
+        title="Click to update this recipe" /> <!-- title attribute will display when mouse hovers over it -->
+      <input type="hidden" name="recipe_to_update" 
+        value="<?php echo $recipe_info['recipe_name']; ?>"
+      />
+      <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen --> 
+    </form>
+  </td> 
+  <!-- DELETE BUTTON --> 
+  <td><form action="helloworld.php" method="post">
+     <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
+      <input type="submit" value="Delete" name="btnAction" class="btn btn-danger" 
+        title="Click to delete this recipe" /> <!-- title attribute will display when mouse hovers over it -->
+      <input type="hidden" name="recipe_to_delete" 
+        value="<?php echo $recipe_info['recipe_name']; ?>" 
+      />
+      <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen --> 
+    </form></td>              
+  </tr>
+<?php endforeach; ?>
+</table>
+</div>  
 
     <!-- <?php echo "Hello World @^_^@"; ?> -->
 </body>

@@ -1,10 +1,10 @@
 <?php
-function addRecipe($recipe_id, $name, $instructions) // Need to pass this in the right order (depends on POST in simpleform.php) 
+function addRecipe($recipe_id, $recipe_name, $instructions) // Need to pass this in the right order (depends on POST in simpleform.php) 
 {
     global $db; // Keep using one connection to save space and prevent suspension (this is similar to memory leak)
     // $db is the variable name of the PDO instance that we made in connect-db.php
     // global in PHP allows us to expand the scope to link to other variales in other files 
-    $query = "INSERT INTO Recipe VALUES (:recipe_id, :name, :instructions)"; // Minimizes the chance of being attacked 
+    $query = "INSERT INTO Recipe VALUES (:recipe_id, :recipe_name, :instructions)"; // Minimizes the chance of being attacked 
     // If you use double quotes, you can use both strings and variables 
     // SQL injection will all be compiled - all the bad code and good code will impact DB 
         // To minimize the chance of being attacked, use a prepare statement 
@@ -14,7 +14,7 @@ function addRecipe($recipe_id, $name, $instructions) // Need to pass this in the
     // Get this query and compile; once it compiles, prepare function will return an 
         // executable version of the query 
     $statement->bindValue(':recipe_id', $recipe_id); 
-    $statement->bindValue(':name', $name); 
+    $statement->bindValue(':recipe_name', $name); 
     $statement->bindValue(':instructions', $instructions);
     //$statement->bindValue(':year', $year); // Fill in the blank with the real value 
     $statement->execute(); // Tell DBMS to actually run 
@@ -29,5 +29,18 @@ function addRecipe($recipe_id, $name, $instructions) // Need to pass this in the
     {
         echo $e->getMessage(); 
     }
+}
+
+function getAllRecipes()
+{
+    global $db; 
+    $query = "SELECT * FROM Recipe";
+    $statement = $db->prepare($query); 
+    $statement->execute(); 
+    $result = $statement->fetchAll(); 
+    // fetchAll fetches all the rows that you got as a result of running the query 
+    // fetch() only retrieves 1 row 
+    $statement->closeCursor(); 
+    return $result; 
 }
 ?>
