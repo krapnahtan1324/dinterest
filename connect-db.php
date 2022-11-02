@@ -13,12 +13,15 @@
 ////////////////////////////////////////////
 
 /** F22, PHP (on local XAMPP or CS server) connect to MySQL instance (GCP) **/
-// $username = 'root';
-// $password = 'your-root-password';
-// $host = 'instance-connection-name';       // e.g., 'cs4750:us-east4:db-demo'; 
-// $dbname = 'your-database-name;;           // e.g., 'guestbook';
-// $dsn = "mysql:host=your-SQL-public-IP-address;dbname=your-database-name";   // connect PHP (XAMPP) to DB (GCP)
-//       e.g., "mysql:host=99.99.999.99;dbname=$dbname";   
+//https://stackoverflow.com/questions/60640996/how-to-connect-to-google-cloud-sql-instance-using-php 
+$username = 'root';
+$password = 'your-root-password';
+$host = 'instance-connection-name';       // e.g., 'cs4750:us-east4:db-demo'; 
+$dbname = 'friends';           // e.g.,'guestbook';
+$dsn = "mysql:host=your-SQL-public-IP-address;dbname=your-database-name";   
+
+// connect PHP (XAMPP) to DB (GCP)
+      // e.g., "mysql:host=99.99.999.99;dbname=$dbname";   
 
 // to get public IP addres of the SQL instance, go to GCP SQL overview page
 
@@ -82,7 +85,7 @@ try
    $db = new PDO($dsn, $username, $password);
    
    // dispaly a message to let us know that we are connected to the database 
-   echo "<p>You are connected to the database --- host=$host</p>";
+   echo "<p>You are connected to the database</p>";
 }
 catch (PDOException $e)     // handle a PDO exception (errors thrown by the PDO library)
 {
