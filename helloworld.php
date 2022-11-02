@@ -1,3 +1,9 @@
+<?php
+require("connect-db.php");
+require("recipe-db.php");
+
+$recipe_to_update = null; 
+?> 
 <!-- 1. create HTML5 doctype -->
 <!DOCTYPE html>
 <html>
@@ -42,7 +48,75 @@
 </head>
 
 <body>
-    <?php echo "Hello World @^_^@"; ?>
+  <!-- Nav Bar -->
+  <nav class="navbar navbar-light bg-light justify-content-between">
+    <a class="navbar-brand" href="#">
+      <img src="assets/DinterestLogo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+      Dinterest
+    </a>
+    <form class="form-inline">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+  </form>
+  </nav>
+
+
+  <!-- Add Recipe -->
+  <div class="container">
+  <h1>Add Recipe</h1>  
+
+<form name="mainForm" method = "post"> <!-- form tag tells the boundaries of where the form starts and ends -->
+<!-- Give a name so you can refer to the form later if needed 
+action attribute: Grab the form data and send it somewhere; in this case, to ourselves (simpleform.php)
+method: Allows yout to specify how the form data should be packaged
+    Most commonly used are post and get 
+        post: As soon as the form is submitted, form data is encapsulated / packaged and sent to the server, and server passes it to the action target 
+        get: As soon as the form is submitted, form data is attached to URL as a parameter value; if you're going to do something confidential, don't use get -->
+  <div class="row mb-3 mx-3"> <!-- This helps with formatting -->
+    Recipe name: <!-- label on the screen -->
+    <input type="text" class="form-control" name="name" required 
+      value="<?php if ($recipe_to_update
+     != null) echo $recipe_to_update
+    ['name'] ?>"
+    />  
+    <!-- 
+    name = "name": Give the name some name so you can refer to it later 
+    required is an attribute of html that forces the user to enter information 
+    If the user tries to submit a form without entering in this box, the browser will enforce this requirement 
+-->
+  </div>  
+  <div class="row mb-3 mx-3"> 
+    Major: 
+    <input type="text" class="form-control" name="major" required 
+    value="<?php if ($recipe_to_update
+   != null) echo $recipe_to_update
+  ['major'] ?>"
+    />
+</div>
+<div class="row mb-3 mx-3">
+    Year: 
+    <input type="number" max="4" min="1" class="form-control" name="year" required 
+    value="<?php if ($recipe_to_update
+   != null) echo $recipe_to_update
+  ['year'] ?>"
+    /> <!-- type="number": Browser will enforce the type input to be number --> 
+    <!-- max and min -->
+</div>
+
+  <div>
+    <input type="submit" value="Add" name="btnAction" class="btn btn-dark"
+        title="Insert a friend into a friend table" /> <!-- Create a submit button 
+    value is used as the text that appears on the button 
+    class is using a btn bootstrap
+    btn-dark: Display it like a button but make it dark
+    title: Allows you to pass in some string to be used as a hint - can be used for accessibility -->
+    <input type="submit" value="Confirm update" name="btnAction" class="btn btn-primary"
+        title="Update this friend" /> <!-- Create a submit button --> 
+</div>
+    
+</form>
+
+    <!-- <?php echo "Hello World @^_^@"; ?> -->
 </body>
 
 </html>

@@ -2,7 +2,7 @@
 Require means that everything here has to work in order to continue--> 
 <?php
 require("connect-db.php");
-require("friend-db.php");
+// require("friend-db.php");
  // include("connect-db.php"); doesn't enforce if something goes wrong 
  // In this case we don't want to use include because if it doesn't work, we want to 
  // terminate immediately 
