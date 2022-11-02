@@ -4,6 +4,42 @@ require("recipe-db.php");
 
 $recipe_to_update = null; 
 ?> 
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of information of all requests that are coming in 
+  // _SERVER is case sensitive, $ means variable 
+  // REQUEST_METHOD keeps track of requests 
+  // POST is checking that it's actually a POST method 
+{
+  if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Add') // if btnAction was clicked, it won't be empty and will have a value 
+    // $_POST['btnAction] == 'Add' makes sure it's an actual Add value 
+    {
+      addRecipe($_POST['recipe_id'], $_POST['name'], $_POST['instructions']); // 3 input boxes; first is name, then major, then year 
+        // Grabbing the inforamtion that we want to save 
+        // Won't add anything yet because we haven't written any SQL 
+      //$list_of_friends = getAllFriends(); // Once you add the new friend, retrieve the table again 
+        // to display all the friends plus the newly submitted one 
+    }
+    // If you plan on having a lot of commands, separate SQL into a separate file 
+    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Update')
+    {
+      $friend_to_update = getFriendByName($_POST['friend_to_update']); 
+    }
+    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Confirm update') // Making sure there's actually something 
+    // to update 
+    {
+      updateFriend($_POST['name'], $_POST['major'], $_POST['year']);
+      // Extract the information from the input boxes and pass it into the function
+      $list_of_friends = getAllFriends(); // SELECT * from the table and display the info again
+    }
+    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Delete') 
+    {
+      deleteFriend($_POST['friend_to_delete']);
+      // Extract the information from the input boxes and pass it into the function
+      $list_of_friends = getAllFriends(); // SELECT * from the table and display the info again
+    }
+}
+?>
 <!-- 1. create HTML5 doctype -->
 <!DOCTYPE html>
 <html>
@@ -72,6 +108,16 @@ method: Allows yout to specify how the form data should be packaged
     Most commonly used are post and get 
         post: As soon as the form is submitted, form data is encapsulated / packaged and sent to the server, and server passes it to the action target 
         get: As soon as the form is submitted, form data is attached to URL as a parameter value; if you're going to do something confidential, don't use get -->
+
+<div class="row mb-3 mx-3"> 
+    Recipe ID: 
+    <input type="text" class="form-control" name="recipe_id" required 
+    value="<?php if ($recipe_to_update
+   != null) echo $recipe_to_update
+  ['recipe_id'] ?>"
+    />
+</div>
+
   <div class="row mb-3 mx-3"> <!-- This helps with formatting -->
     Recipe name: <!-- label on the screen -->
     <input type="text" class="form-control" name="name" required 
@@ -86,21 +132,12 @@ method: Allows yout to specify how the form data should be packaged
 -->
   </div>  
   <div class="row mb-3 mx-3"> 
-    Major: 
-    <input type="text" class="form-control" name="major" required 
+    Instructions: 
+    <input type="text" class="form-control" name="instructions" required 
     value="<?php if ($recipe_to_update
    != null) echo $recipe_to_update
-  ['major'] ?>"
+  ['instructions'] ?>"
     />
-</div>
-<div class="row mb-3 mx-3">
-    Year: 
-    <input type="number" max="4" min="1" class="form-control" name="year" required 
-    value="<?php if ($recipe_to_update
-   != null) echo $recipe_to_update
-  ['year'] ?>"
-    /> <!-- type="number": Browser will enforce the type input to be number --> 
-    <!-- max and min -->
 </div>
 
   <div>

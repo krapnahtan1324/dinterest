@@ -15,7 +15,7 @@
 /** F22, PHP (on local XAMPP or CS server) connect to MySQL instance (GCP) **/
 //https://stackoverflow.com/questions/60640996/how-to-connect-to-google-cloud-sql-instance-using-php 
 $username = 'root';
-$password = 'your-root-password';
+$password = 'Dinterestproject1234';
 $host = '35.236.223.136';       // e.g., 'cs4750:us-east4:db-demo'; 
 $dbname = 'dinterest';           // e.g.,'guestbook';
 $dsn = "mysql:host=35.236.223.136;dbname=dinterest";   
