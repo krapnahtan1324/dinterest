@@ -1,0 +1,7 @@
+# Use the PHP 7.4 runtime
+runtime: php74
+
+# Defaults to "serve index.php" 
+entrypoint: serve helloworld.php
+
+# If your main page is index.php, comment the above entrypoint setting

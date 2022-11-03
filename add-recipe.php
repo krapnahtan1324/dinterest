@@ -16,7 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
     // $_POST['btnAction] == 'Add' makes sure it's an actual Add value 
     {
       addRecipe($_POST['recipe_id'], $_POST['recipe_name'], $_POST['instructions']); // 3 input boxes; first is name, then major, then year 
-        // Grabbing the inforamtion that we want to save 
+      addFilterableCharacteristics($_POST['recipe_id'], $_POST['cuisine'], $_POST['servings'], $_POST['total_time']);  
+      // Grabbing the inforamtion that we want to save 
         // Won't add anything yet because we haven't written any SQL 
       //$list_of_recipes = getAllrecipes(); // Once you add the new recipe, retrieve the table again 
         // to display all the recipes plus the newly submitted one 
@@ -121,7 +122,7 @@ method: Allows yout to specify how the form data should be packaged
 
   <div class="row mb-3 mx-3"> <!-- This helps with formatting -->
     Recipe name: <!-- label on the screen -->
-    <input type="text" class="form-control" name="name" required 
+    <input type="text" class="form-control" name="recipe_name" required 
       value="<?php if ($recipe_to_update
      != null) echo $recipe_to_update
     ['recipe_name'] ?>"
@@ -138,6 +139,33 @@ method: Allows yout to specify how the form data should be packaged
     value="<?php if ($recipe_to_update
    != null) echo $recipe_to_update
   ['instructions'] ?>"
+    />
+</div>
+
+<div class="row mb-3 mx-3"> 
+    Cuisine: 
+    <input type="text" class="form-control" name="cuisine" required 
+    value="<?php if ($recipe_to_update
+   != null) echo $recipe_to_update
+  ['cuisine'] ?>"
+    />
+</div>
+
+<div class="row mb-3 mx-3"> 
+    Servings: 
+    <input type="text" class="form-control" name="servings" required 
+    value="<?php if ($recipe_to_update
+   != null) echo $recipe_to_update
+  ['servings'] ?>"
+    />
+</div>
+
+<div class="row mb-3 mx-3"> 
+    Total time: 
+    <input type="text" class="form-control" name="total_time" required 
+    value="<?php if ($recipe_to_update
+   != null) echo $recipe_to_update
+  ['total_time'] ?>"
     />
 </div>
 
