@@ -14,7 +14,7 @@ function addRecipe($recipe_id, $recipe_name, $instructions) // Need to pass this
     // Get this query and compile; once it compiles, prepare function will return an 
         // executable version of the query 
     $statement->bindValue(':recipe_id', $recipe_id); 
-    $statement->bindValue(':recipe_name', $recipe_name); 
+    $statement->bindValue(':recipe_name', $recipe_recipe_name); 
     $statement->bindValue(':instructions', $instructions);
     //$statement->bindValue(':year', $year); // Fill in the blank with the real value 
     $statement->execute(); // Tell DBMS to actually run 
@@ -81,7 +81,7 @@ function addFilterableCharacteristics($recipe_id, $cuisine, $servings, $total_ti
     catch (PDOException $e)
     {
         if ($statement->rowCount() == 0)
-            echo "Failed to add a friend <br/"; 
+            echo "Failed to add a filterable characteristic <br/"; 
     }
     catch (Exception $e)
     {
@@ -115,3 +115,44 @@ function getAllRecipeIngredients()
     $statement->closeCursor(); 
     return $result; 
 }
+
+function addRecipeType($recipe_id, $type, $recipeType){
+    global $db; 
+    if ($type == 'Drink'){
+        $query = "INSERT INTO Drink VALUES (:recipe_id, :recipeType)";
+    }
+    else if ($type == 'Appetizer'){
+        $query = "INSERT INTO Appetizer VALUES (:recipe_id, :recipeType)";
+    }
+    else if ($type == 'Entree'){
+        $query = "INSERT INTO Entree VALUES (:recipe_id, :recipeType)";
+    }
+    else if ($type == 'Dessert'){
+        $query = "INSERT INTO Dessert VALUES (:recipe_id, :recipeType)";
+    }
+
+    try {
+        $statement = $db->prepare($query); 
+        $statement->bindValue(':recipe_id', $recipe_id); 
+        $statement->bindValue(':recipeType', $recipeType); 
+        $statement->execute(); // Tell DBMS to actually run 
+        $statement->closeCursor(); // We executed the query so release it so other users can make use of that instance
+        }
+        catch (PDOException $e)
+        {
+            if ($statement->rowCount() == 0)
+                echo "Failed to add recipe type <br/"; 
+        }
+        catch (Exception $e)
+        {
+            echo $e->getMessage(); 
+        }
+
+
+}
+
+
+
+
+
+?>
