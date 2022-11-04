@@ -14,7 +14,7 @@ function addRecipe($recipe_id, $recipe_name, $instructions) // Need to pass this
     // Get this query and compile; once it compiles, prepare function will return an 
         // executable version of the query 
     $statement->bindValue(':recipe_id', $recipe_id); 
-    $statement->bindValue(':recipe_name', $name); 
+    $statement->bindValue(':recipe_name', $recipe_name); 
     $statement->bindValue(':instructions', $instructions);
     //$statement->bindValue(':year', $year); // Fill in the blank with the real value 
     $statement->execute(); // Tell DBMS to actually run 
@@ -23,7 +23,30 @@ function addRecipe($recipe_id, $recipe_name, $instructions) // Need to pass this
     catch (PDOException $e)
     {
         if ($statement->rowCount() == 0)
-            echo "Failed to add a friend <br/"; 
+            echo "Failed to add a recipe <br/"; 
+    }
+    catch (Exception $e)
+    {
+        echo $e->getMessage(); 
+    }
+}
+
+function addRecipeIngredients($recipe_id, $ingredients) 
+{
+    global $db; 
+    $query = "INSERT INTO Recipe_ingredients VALUES (:recipe_id, :ingredients)";  
+    try {
+    $statement = $db->prepare($query); 
+    $statement->bindValue(':recipe_id', $recipe_id); 
+    $statement->bindValue(':ingredients', $ingredients);
+   
+    $statement->execute(); 
+    $statement->closeCursor(); 
+    }
+    catch (PDOException $e)
+    {
+        if ($statement->rowCount() == 0)
+            echo "Failed to add to recipe_ingredients <br/"; 
     }
     catch (Exception $e)
     {
@@ -43,4 +66,16 @@ function getAllRecipes()
     $statement->closeCursor(); 
     return $result; 
 }
-?>
+
+function getAllRecipeIngredients()
+{
+    global $db; 
+    $query = "SELECT * FROM Recipe_ingredients";
+    $statement = $db->prepare($query); 
+    $statement->execute(); 
+    $result = $statement->fetchAll(); 
+    // fetchAll fetches all the rows that you got as a result of running the query 
+    // fetch() only retrieves 1 row 
+    $statement->closeCursor(); 
+    return $result; 
+}
