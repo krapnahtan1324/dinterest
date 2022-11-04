@@ -21,7 +21,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
         // Won't add anything yet because we haven't written any SQL 
       //$list_of_recipes = getAllrecipes(); // Once you add the new recipe, retrieve the table again 
         // to display all the recipes plus the newly submitted one 
+
+      // For the selecting recipe type -- first making sure the value is selected in the select box 
+
+
+      if(!isset($_POST['type'])) 
+        {
+        $errorMessage .= "<li>You forgot to select your Gender!</li>";
+        }
+        else {
+          addRecipeType($_POST['recipe_id'], $_POST['type'], $_POST['recipeType']);
+        }
     }
+
+    
+
     // If you plan on having a lot of commands, separate SQL into a separate file 
     else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Update')
     {
@@ -168,6 +182,35 @@ method: Allows yout to specify how the form data should be packaged
   ['total_time'] ?>"
     />
 </div>
+
+<!-- Select the type of recipe it is so we know which database it needs to go into -->
+<div class="row mb-3 mx-3"> 
+  Select Recipe Category: 
+<select name = "type"> 
+  <option value = "">Select...</option>
+  <option value = "Drink">Drink</option> 
+  <option value = "Appetizer">Appetizer</option>
+  <option value = "Entree">Entree</option>
+  <option value = "Dessert">Dessert</option>
+</select>
+</div>
+
+<!-- Write the type of recipe it is --> 
+<div class = "row mb-3 mx-3"> 
+  Type of Recipe: 
+  <input type="text" class="form-control" name="recipeType" required
+  value="<?php if ($recipe_to_update
+  != null) echo $recipe_to_update
+  ['recipeType'] ?>"
+  />
+</div>
+
+
+
+
+
+
+
 
   <div>
     <input type="submit" value="Add" name="btnAction" class="btn btn-dark"
