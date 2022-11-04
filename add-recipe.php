@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
 
       if(!isset($_POST['type'])) 
         {
-        $errorMessage .= "<li>You forgot to select your Gender!</li>";
+        $errorMessage = "<li>You forgot to select your Gender!</li>";
         }
         else {
           addRecipeType($_POST['recipe_id'], $_POST['type'], $_POST['recipeType']);
