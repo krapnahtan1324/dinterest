@@ -14,7 +14,7 @@ function addRecipe($recipe_id, $recipe_name, $instructions) // Need to pass this
     // Get this query and compile; once it compiles, prepare function will return an 
         // executable version of the query 
     $statement->bindValue(':recipe_id', $recipe_id); 
-    $statement->bindValue(':recipe_name', $name); 
+    $statement->bindValue(':recipe_name', $recipe_name); 
     $statement->bindValue(':instructions', $instructions);
     //$statement->bindValue(':year', $year); // Fill in the blank with the real value 
     $statement->execute(); // Tell DBMS to actually run 
