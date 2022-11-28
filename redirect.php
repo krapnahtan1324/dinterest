@@ -1,4 +1,6 @@
 <?php
+require("connect-db.php");
+require 'recipe-db.php';
 require_once 'vendor/autoload.php';
   
 // init configuration
@@ -25,8 +27,12 @@ if (isset($_GET['code'])) {
   $email =  $google_account_info->email;
   print_r($email);
   $name =  $google_account_info->name;
+  $password = 'test';
 
-  global $db;  
+  #global $db;
+  $username = $email;
+  addUser($username, $password, $name);
+
   // $email = "gloriasun@gmail.com";
   // $name = "Gloria";
   // $password = "urmom";

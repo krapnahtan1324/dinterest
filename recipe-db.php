@@ -151,7 +151,26 @@ function addRecipeType($recipe_id, $type, $recipeType){
 
 }
 
+function addUser($username, $password, $name) {
+    global $db;
+    $query = "INSERT INTO User VALUES (:username, :password, :name)";
 
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':username', $username);
+        $statement->bindValue(':password', $password);
+        $statement->bindValue(':name', $name);
+        $statement->execute();
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        if ($statement->rowCount() == 0)
+            echo "Failed to add user <br/"; 
+    } catch (Exception $e) {
+        echo $e->getMessage(); 
+    }
+
+
+}
 
 
 
