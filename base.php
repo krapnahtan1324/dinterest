@@ -67,10 +67,10 @@ require_once("config.php");
             <a class="nav-link" href="user-recipe.php">My Recipes</a>
         </li>
     </ul>
-    <form class="form-inline">
+    <!-- <form class="form-inline">
     <input class="form-control mr-sm-2" type="search" placeholder="Look for recipes" aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+    </form> -->
     <?php
         if (isset($_SESSION['user'])) { ?>
             <a href="logout.php">

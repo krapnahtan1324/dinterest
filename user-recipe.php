@@ -2,6 +2,7 @@
     .recipe {
         border-bottom: 1px solid black;
     }
+    
 </style>
 
 <?php
@@ -11,7 +12,7 @@ require("recipe-db.php");
 require("base.php");
 //require_once("config.php");
 
-if (!isset($_SESSION['user'])) {    
+if (!isset($_SESSION['name'])) {    
     echo "Please log in to either view your recipes or add another";
 } else {
 
@@ -138,12 +139,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
   </form>
   </nav> -->
-
+<h2>
+    <?php echo"Hi {$_SESSION['name']}"?>
+</h2>
 
   <!-- Add Recipe -->
   <div class="container">
     <br>
-  <h1>Add Recipe</h1>  
+  <h2>Add Recipe</h2>  
 
 
 <form name="mainForm" method = "post"> <!-- form tag tells the boundaries of where the form starts and ends -->
@@ -261,7 +264,84 @@ method: Allows yout to specify how the form data should be packaged
 
 </div>
 
-<hr/> <!-- Horizontal --> 
+<hr/><br><br> <!-- Horizontal --> 
+<!-- Search function -->
+<div class="text-center">
+<form method="post" action="user-recipe.php">
+  <input type="text" name="search" placeholder="Look up recipes by name" required/>
+  <input type="submit" value="Search"/>
+</form>
+</div>
+
+
+
+<?php
+    // (B) PROCESS SEARCH WHEN FORM SUBMITTED
+    if (isset($_POST["search"])) {
+      // (B1) SEARCH FOR USERS
+      require "search_byuser.php";
+?>
+    <h3> My Recipes</h3>
+    <div class="row justify-content-center">  
+    <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
+    <thead> <!-- For the table set up the header --> 
+    <tr style="background-color:#B0B0B0">
+        <th width="30%"><b>Recipe_id</b></th>       
+        <th width="30%"><b>Name</b></th>      
+        <th width="30%"><b>Instructions</b></th>  
+        <th><b>Update?</b></th>
+        <th><b>Delete?</b></th>
+    </tr>
+    </thead>
+<?php
+      // (B2) DISPLAY RESULTS
+      if (count($results) > 0) { 
+
+        // printf("<div>%s - %s</div>", $r["recipe_name"]);
+        
+        // printf($r["recipe_name"]);
+        foreach ($results as $recipe_info) { ?>
+        <tr class="recipe">
+          <td><?php echo $recipe_info['recipe_id']; ?></td>
+          <td><?php echo $recipe_info['recipe_name']; ?></td>        
+    <td><?php echo $recipe_info['instructions']; ?></td>  
+    <td>
+      <form action="add-recipe.php" method="post">
+    <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
+      <input type="submit" value="Update" name="btnAction" class="btn btn-primary"
+        title="Click to update this recipe" /> <!-- title attribute will display when mouse hovers over it -->
+      <input type="hidden" name="recipe_to_update" 
+        value="<?php echo $recipe_info['recipe_name']; ?>"
+      />
+      <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen --> 
+    </form>
+  </td> 
+  <!-- DELETE BUTTON --> 
+  <td><form action="add-recipe.php" method="post">
+    <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
+      <input type="submit" value="Delete" name="btnAction" class="btn btn-danger" 
+        title="Click to delete this recipe" /> <!-- title attribute will display when mouse hovers over it -->
+      <input type="hidden" name="recipe_to_delete" 
+        value="<?php echo $recipe_info['recipe_name']; ?>" 
+      />
+      <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen --> 
+    </form></td>              
+        </tr>
+
+        <?php }
+
+    } else { ?>
+
+      <p>No results found.<br></p>
+      </table>
+
+    </div>
+    
+    <?php
+    }
+    unset($_POST["search"]);
+    } else { ?>
+
 <h3> My Recipes</h3> 
 <div class="row justify-content-center">  
 <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
@@ -274,6 +354,7 @@ method: Allows yout to specify how the form data should be packaged
     <th><b>Delete?</b></th>
   </tr>
   </thead>
+
 <?php foreach ($list_of_recipes as $recipe_info): ?> <!-- Call each row as recipe_info -->
   <tr class="recipe"> 
     <td><?php echo $recipe_info['recipe_id']; ?></td>
@@ -303,7 +384,14 @@ method: Allows yout to specify how the form data should be packaged
   </tr>
 <?php endforeach; ?>
 </table>
-</div>  
+</div>
+    <?php
+    }
+?>
+
+
+
+  
 <br>
 <br>
     <!-- <?php echo "Hello World @^_^@"; ?> -->
