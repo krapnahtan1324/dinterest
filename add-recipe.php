@@ -23,6 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
       // Grabbing the inforamtion that we want to save 
       
       addRecipeIngredients($_POST['recipe_id'], $_POST['ingredients']);
+      addRecipeType($_POST['recipe_id'], $_POST['type'], $_POST['recipeType']);
+      addCreatedBy($_POST['recipe_id'], $_SESSION['user']);
 
         // Grabbing the inforamtion that we want to save 
         // Won't add anything yet because we haven't written any SQL 
@@ -30,15 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
         // to display all the recipes plus the newly submitted one 
 
       // For the selecting recipe type -- first making sure the value is selected in the select box 
-
-
-      if(!isset($_POST['type'])) 
-        {
-        $errorMessage = "<li>You forgot to select your recipe type!</li>";
-        }
-        else {
-          addRecipeType($_POST['recipe_id'], $_POST['type'], $_POST['recipeType']);
-        }
+      
     }
 
     
@@ -187,7 +181,7 @@ method: Allows yout to specify how the form data should be packaged
 
 <div class="row mb-3 mx-3"> 
     Servings: 
-    <input type="text" class="form-control" name="servings" required 
+    <input type="number" class="form-control" name="servings" required 
     value="<?php if ($recipe_to_update
    != null) echo $recipe_to_update
   ['servings'] ?>"
@@ -206,7 +200,7 @@ method: Allows yout to specify how the form data should be packaged
 <!-- Select the type of recipe it is so we know which database it needs to go into -->
 <div class="row mb-3 mx-3"> 
   Select Recipe Category: 
-<select name = "type"> 
+<select name = "type" required> 
   <option value = "">Select...</option>
   <option value = "Drink">Drink</option> 
   <option value = "Appetizer">Appetizer</option>

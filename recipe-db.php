@@ -180,6 +180,30 @@ function addUser($username, $name) {
 
 }
 
+//add the recipe id and the recipe creator to the Created_by table
+function addCreatedBy($recipe_id, $username) 
+{
+    global $db; 
+    $query = "INSERT INTO Created_by VALUES (:recipe_id, :username)";  
+    try {
+    $statement = $db->prepare($query); 
+    $statement->bindValue(':recipe_id', $recipe_id); 
+    $statement->bindValue(':username', $username);
+   
+    $statement->execute(); 
+    $statement->closeCursor(); 
+    }
+    catch (PDOException $e)
+    {
+        if ($statement->rowCount() == 0)
+            echo "Failed to add to Created_by <br/"; 
+    }
+    catch (Exception $e)
+    {
+        echo $e->getMessage(); 
+    }
+}
+
 
 
 ?>
