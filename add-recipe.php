@@ -9,67 +9,7 @@ $recipe_to_update = null;
 $recipeingredients_to_update = null;
 ?> 
 
-<?php
-if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of information of all requests that are coming in 
-  // _SERVER is case sensitive, $ means variable 
-  // REQUEST_METHOD keeps track of requests 
-  // POST is checking that it's actually a POST method 
-{
-  if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Add') // if btnAction was clicked, it won't be empty and will have a value 
-    // $_POST['btnAction] == 'Add' makes sure it's an actual Add value 
-    {
-      $recipe_id = $_POST['recipe_id'];
-      $query = "SELECT * FROM Recipe WHERE recipe_id = '$recipe_id'";
-      $statement = $db->prepare($query);
-      $statement->execute();
-      $result = $statement->fetch();
-      $statement->closeCursor();
 
-      if ($result) {
-        echo "recipe_id already exists, choose a different one";
-      } else {
-        addRecipe($_POST['recipe_id'], $_POST['recipe_name'], $_POST['instructions']); // 3 input boxes; first is name, then major, then year 
-        addFilterableCharacteristics($_POST['recipe_id'], $_POST['cuisine'], $_POST['servings'], $_POST['total_time']);  
-        // Grabbing the inforamtion that we want to save 
-      
-        addRecipeIngredients($_POST['recipe_id'], $_POST['ingredients']);
-        addRecipeType($_POST['recipe_id'], $_POST['type'], $_POST['recipeType']);
-        addCreatedBy($_POST['recipe_id'], $_SESSION['user']);
-
-          // Grabbing the inforamtion that we want to save 
-          // Won't add anything yet because we haven't written any SQL 
-        //$list_of_recipes = getAllRecipes(); // Once you add the new recipe, retrieve the table again 
-          // to display all the recipes plus the newly submitted one 
-
-        // For the selecting recipe type -- first making sure the value is selected in the select box
-      }
-
-       
-      
-    }
-
-    
-
-    // If you plan on having a lot of commands, separate SQL into a separate file 
-    // else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Update')
-    // {
-    //   $recipe_to_update = getrecipeByName($_POST['recipe_to_update']); 
-    // }
-    // else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Confirm update') // Making sure there's actually something 
-    // // to update 
-    // {
-    //   updaterecipe($_POST['recipe_name'], $_POST['major'], $_POST['year']);
-    //   // Extract the information from the input boxes and pass it into the function
-    //   $list_of_recipes = getAllRecipes(); // SELECT * from the table and display the info again
-    // }
-    // else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Delete') 
-    // {
-    //   deleterecipe($_POST['recipe_to_delete']);
-    //   // Extract the information from the input boxes and pass it into the function
-    //   $list_of_recipes = getAllRecipes(); // SELECT * from the table and display the info again
-    // }
-}
-?>
 <!-- 1. create HTML5 doctype -->
 <!DOCTYPE html>
 <html>
@@ -126,140 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
   </form>
   </nav> -->
 
-
-  <!-- Add Recipe -->
-  <div class="container">
-  <h1>Add Recipe</h1>  
-
-<?php if (isset($_SESSION['user'])) { ?>
-
-
-<form name="mainForm" method = "post"> <!-- form tag tells the boundaries of where the form starts and ends -->
-<!-- Give a name so you can refer to the form later if needed 
-action attribute: Grab the form data and send it somewhere; in this case, to ourselves (simpleform.php)
-method: Allows yout to specify how the form data should be packaged
-    Most commonly used are post and get 
-        post: As soon as the form is submitted, form data is encapsulated / packaged and sent to the server, and server passes it to the action target 
-        get: As soon as the form is submitted, form data is attached to URL as a parameter value; if you're going to do something confidential, don't use get -->
-
-<div class="row mb-3 mx-3"> 
-    Recipe ID: 
-    <input type="text" class="form-control" name="recipe_id" required 
-    value="<?php if ($recipe_to_update
-  != null) echo $recipe_to_update
-  ['recipe_id'] ?>"
-    />
-</div>
-
-  <div class="row mb-3 mx-3"> <!-- This helps with formatting -->
-    Recipe name: <!-- label on the screen -->
-    <input type="text" class="form-control" name="recipe_name" required 
-      value="<?php if ($recipe_to_update
-    != null) echo $recipe_to_update
-    ['recipe_name'] ?>"
-    />  
-    <!-- 
-    name = "name": Give the name some name so you can refer to it later 
-    required is an attribute of html that forces the user to enter information 
-    If the user tries to submit a form without entering in this box, the browser will enforce this requirement 
--->
-  </div>  
-
-  <div class="row mb-3 mx-3"> 
-    Ingredients: 
-    <input type="text" class="form-control" name="ingredients" required
-    value="<?php if ($recipeingredients_to_update
-  != null) echo $recipeingredients_to_update
-  ['ingredients'] ?>"
-    />
-</div>
-
-  <div class="row mb-3 mx-3"> 
-    Instructions: 
-    <input type="text" class="form-control" name="instructions" required 
-    value="<?php if ($recipe_to_update
-  != null) echo $recipe_to_update
-  ['instructions'] ?>"
-    />
-</div>
-
-<div class="row mb-3 mx-3"> 
-    Cuisine: 
-    <input type="text" class="form-control" name="cuisine" required 
-    value="<?php if ($recipe_to_update
-   != null) echo $recipe_to_update
-  ['cuisine'] ?>"
-    />
-</div>
-
-<div class="row mb-3 mx-3"> 
-    Servings: 
-    <input type="number" class="form-control" name="servings" required 
-    value="<?php if ($recipe_to_update
-   != null) echo $recipe_to_update
-  ['servings'] ?>"
-    />
-</div>
-
-<div class="row mb-3 mx-3"> 
-    Total time: 
-    <input type="text" class="form-control" name="total_time" required 
-    value="<?php if ($recipe_to_update
-   != null) echo $recipe_to_update
-  ['total_time'] ?>"
-    />
-</div>
-
-<!-- Select the type of recipe it is so we know which database it needs to go into -->
-<div class="row mb-3 mx-3"> 
-  Select Recipe Category: 
-<select name = "type" required> 
-  <option value = "">Select...</option>
-  <option value = "Drink">Drink</option> 
-  <option value = "Appetizer">Appetizer</option>
-  <option value = "Entree">Entree</option>
-  <option value = "Dessert">Dessert</option>
-</select>
-</div>
-
-<!-- Write the type of recipe it is --> 
-<div class = "row mb-3 mx-3"> 
-  Type of Recipe: 
-  <input type="text" class="form-control" name="recipeType" required
-  value="<?php if ($recipe_to_update
-  != null) echo $recipe_to_update
-  ['recipeType'] ?>"
-  />
-</div>
-
-
-
-
-
-
-
-
-  <div>
-    <input type="submit" value="Add" name="btnAction" class="btn btn-dark"
-        title="Insert a recipe into a recipe table" /> <!-- Create a submit button 
-    value is used as the text that appears on the button 
-    class is using a btn bootstrap
-    btn-dark: Display it like a button but make it dark
-    title: Allows you to pass in some string to be used as a hint - can be used for accessibility -->
-    <input type="submit" value="Confirm update" name="btnAction" class="btn btn-primary"
-        title="Update this recipe" /> <!-- Create a submit button --> 
-</div>
-    
-</form>
-
-<?php } else {
-        echo "Must be logged in to add a recipe!";
-      }
-?>
-
-</div>
-
-<hr/> <!-- Horizontal --> 
+<br>
 <h3> List of Recipes</h3> 
 <div class="row justify-content-center">  
 <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
@@ -279,24 +86,24 @@ method: Allows yout to specify how the form data should be packaged
     <td><?php echo $recipe_info['instructions']; ?></td>  
     <td>
       <form action="add-recipe.php" method="post">
-    <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
+    <!-- As soon as the button is clicked, send a request to simpleform.php so it can update  -->
       <input type="submit" value="Update" name="btnAction" class="btn btn-primary"
         title="Click to update this recipe" /> <!-- title attribute will display when mouse hovers over it -->
       <input type="hidden" name="recipe_to_update" 
         value="<?php echo $recipe_info['recipe_name']; ?>"
       />
-      <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen --> 
-    </form>
+      <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen  -->
+      </form>
   </td> 
-  <!-- DELETE BUTTON --> 
+  <!-- DELETE BUTTON  -->
   <td><form action="add-recipe.php" method="post">
-    <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
+    <!-- As soon as the button is clicked, send a request to simpleform.php so it can update  -->
       <input type="submit" value="Delete" name="btnAction" class="btn btn-danger" 
-        title="Click to delete this recipe" /> <!-- title attribute will display when mouse hovers over it -->
+        title="Click to delete this recipe" /> <!--title attribute will display when mouse hovers over it -->
       <input type="hidden" name="recipe_to_delete" 
         value="<?php echo $recipe_info['recipe_name']; ?>" 
       />
-      <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen --> 
+      <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen  -->
     </form></td>              
   </tr>
 <?php endforeach; ?>

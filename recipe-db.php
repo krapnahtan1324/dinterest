@@ -103,6 +103,19 @@ function getAllRecipes()
     return $result; 
 }
 
+function getUserRecipes($username)
+{
+    global $db; 
+    $query = "SELECT * FROM Recipe NATURAL JOIN Created_by WHERE username = '$username'";
+    $statement = $db->prepare($query); 
+    $statement->execute(); 
+    $result = $statement->fetchAll(); 
+    // fetchAll fetches all the rows that you got as a result of running the query 
+    // fetch() only retrieves 1 row 
+    $statement->closeCursor(); 
+    return $result; 
+}
+
 function getAllRecipeIngredients()
 {
     global $db; 

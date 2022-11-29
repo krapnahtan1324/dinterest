@@ -54,11 +54,19 @@ require_once("config.php");
 
 <body>
   <!-- Nav Bar -->
-  <nav class="navbar navbar-light bg-light justify-content-between">
+  <nav class="navbar navbar-light bg-light navbar-expand-sm justify-content-between">
     <a class="navbar-brand" href="add-recipe.php">
       <img src="assets/DinterestLogo.png" width="30" height="30" class="d-inline-block align-top" alt="">
       Dinterest
     </a>
+    <ul class="navbar-nav">
+        <li class="nav-item-active">
+            <a class="nav-link" href="add-recipe.php">All Recipes</a>
+        </li>
+        <li class="nav-item-active">
+            <a class="nav-link" href="user-recipe.php">My Recipes</a>
+        </li>
+    </ul>
     <form class="form-inline">
     <input class="form-control mr-sm-2" type="search" placeholder="Look for recipes" aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
