@@ -151,22 +151,30 @@ function addRecipeType($recipe_id, $type, $recipeType){
 
 }
 
-function addUser($username, $password, $name) {
+function addUser($username, $name) {
     global $db;
-    $query = "INSERT INTO User VALUES (:username, :password, :name)";
+    $query = "SELECT * FROM User WHERE username = '$username'";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $result = $statement->fetch();
+    $statement->closeCursor();
+    if ($result) {
+        header('Location: add-recipe.php');
+    } else {
+        $query = "INSERT INTO User VALUES (:username, :name)";
 
-    try {
-        $statement = $db->prepare($query);
-        $statement->bindValue(':username', $username);
-        $statement->bindValue(':password', $password);
-        $statement->bindValue(':name', $name);
-        $statement->execute();
-        $statement->closeCursor();
-    } catch (PDOException $e) {
-        if ($statement->rowCount() == 0)
-            echo "Failed to add user <br/"; 
-    } catch (Exception $e) {
-        echo $e->getMessage(); 
+        try {
+            $statement = $db->prepare($query);
+            $statement->bindValue(':username', $username);
+            $statement->bindValue(':name', $name);
+            $statement->execute();
+            $statement->closeCursor();
+        } catch (PDOException $e) {
+            if ($statement->rowCount() == 0)
+                echo "Failed to add user <br/"; 
+        } catch (Exception $e) {
+            echo $e->getMessage(); 
+        }
     }
 
 

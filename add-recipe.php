@@ -1,6 +1,8 @@
 <?php
 require("connect-db.php");
 require("recipe-db.php");
+require("base.php");
+require_once("config.php");
 
 $list_of_recipes = getAllRecipes();
 $recipe_to_update = null; 
@@ -106,8 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
 
 <body>
   <!-- Nav Bar -->
-  <nav class="navbar navbar-light bg-light justify-content-between">
-    <a class="navbar-brand" href="#">
+  <!-- <nav class="navbar navbar-light bg-light justify-content-between">
+    <a class="navbar-brand" href="add-recipe.php">
       <img src="assets/DinterestLogo.png" width="30" height="30" class="d-inline-block align-top" alt="">
       Dinterest
     </a>
@@ -115,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
   </form>
-  </nav>
+  </nav> -->
 
 
   <!-- Add Recipe -->
