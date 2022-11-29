@@ -18,20 +18,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
   if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Add') // if btnAction was clicked, it won't be empty and will have a value 
     // $_POST['btnAction] == 'Add' makes sure it's an actual Add value 
     {
-      addRecipe($_POST['recipe_id'], $_POST['recipe_name'], $_POST['instructions']); // 3 input boxes; first is name, then major, then year 
-      addFilterableCharacteristics($_POST['recipe_id'], $_POST['cuisine'], $_POST['servings'], $_POST['total_time']);  
-      // Grabbing the inforamtion that we want to save 
-      
-      addRecipeIngredients($_POST['recipe_id'], $_POST['ingredients']);
-      addRecipeType($_POST['recipe_id'], $_POST['type'], $_POST['recipeType']);
-      addCreatedBy($_POST['recipe_id'], $_SESSION['user']);
+      $recipe_id = $_POST['recipe_id'];
+      $query = "SELECT * FROM Recipe WHERE recipe_id = '$recipe_id'";
+      $statement = $db->prepare($query);
+      $statement->execute();
+      $result = $statement->fetch();
+      $statement->closeCursor();
 
+      if ($result) {
+        echo "recipe_id already exists, choose a different one";
+      } else {
+        addRecipe($_POST['recipe_id'], $_POST['recipe_name'], $_POST['instructions']); // 3 input boxes; first is name, then major, then year 
+        addFilterableCharacteristics($_POST['recipe_id'], $_POST['cuisine'], $_POST['servings'], $_POST['total_time']);  
         // Grabbing the inforamtion that we want to save 
-        // Won't add anything yet because we haven't written any SQL 
-      //$list_of_recipes = getAllRecipes(); // Once you add the new recipe, retrieve the table again 
-        // to display all the recipes plus the newly submitted one 
+      
+        addRecipeIngredients($_POST['recipe_id'], $_POST['ingredients']);
+        addRecipeType($_POST['recipe_id'], $_POST['type'], $_POST['recipeType']);
+        addCreatedBy($_POST['recipe_id'], $_SESSION['user']);
 
-      // For the selecting recipe type -- first making sure the value is selected in the select box 
+          // Grabbing the inforamtion that we want to save 
+          // Won't add anything yet because we haven't written any SQL 
+        //$list_of_recipes = getAllRecipes(); // Once you add the new recipe, retrieve the table again 
+          // to display all the recipes plus the newly submitted one 
+
+        // For the selecting recipe type -- first making sure the value is selected in the select box
+      }
+
+       
       
     }
 
