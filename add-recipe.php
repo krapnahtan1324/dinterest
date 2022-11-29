@@ -118,19 +118,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
   </form>
   </nav> -->
-  <div>
-    <?php
-    if (isset($_SESSION['user'])) {
-      echo $_SESSION['user'];
-    } else {
-      echo "Not in session";
-    }
-    ?>
-  </div>
+
 
   <!-- Add Recipe -->
   <div class="container">
   <h1>Add Recipe</h1>  
+
+<?php if (isset($_SESSION['user'])) { ?>
+
 
 <form name="mainForm" method = "post"> <!-- form tag tells the boundaries of where the form starts and ends -->
 <!-- Give a name so you can refer to the form later if needed 
@@ -165,7 +160,7 @@ method: Allows yout to specify how the form data should be packaged
 
   <div class="row mb-3 mx-3"> 
     Ingredients: 
-    <input type="text" class="form-control" name="ingredients" required 
+    <input type="text" class="form-control" name="ingredients" required
     value="<?php if ($recipeingredients_to_update
   != null) echo $recipeingredients_to_update
   ['ingredients'] ?>"
@@ -249,6 +244,13 @@ method: Allows yout to specify how the form data should be packaged
 </div>
     
 </form>
+
+<?php } else {
+        echo "Must be logged in to add a recipe!";
+      }
+?>
+
+</div>
 
 <hr/> <!-- Horizontal --> 
 <h3> List of Recipes</h3> 
