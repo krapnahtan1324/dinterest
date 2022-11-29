@@ -1,3 +1,15 @@
+<style>
+    nav {
+    border-bottom: 2px solid #000;
+    }
+</style>
+
+
+<?php
+require_once("config.php");
+?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,11 +60,24 @@
       Dinterest
     </a>
     <form class="form-inline">
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    <input class="form-control mr-sm-2" type="search" placeholder="Look for recipes" aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
-    <a href="redirect.php">
-        <button class="btn btn-primary my-2 my-sm-0" type="button">Login</button>
-    </a>
+    <?php
+        if (isset($_SESSION['user'])) { ?>
+            <a href="logout.php">
+                <button title="logout" class="btn btn-danger my-2 my-sm-0" type="button">Logout</button>
+            </a>
+    <?php    
+        } else { ?>
+            <a href="redirect.php">
+                <button title="login with Google" class="btn btn-primary my-2 my-sm-0" type="button">Login</button>
+            </a>
+    <?php
+        }   
+    ?>
+    <!-- <a href="redirect.php">
+        <button title="login with Google" class="btn btn-primary my-2 my-sm-0" type="button">Login</button>
+    </a> -->
   </nav>
   </body>

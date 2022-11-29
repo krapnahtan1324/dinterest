@@ -30,10 +30,13 @@ if (isset($_GET['code'])) {
   #print_r($email);
   $name =  $google_account_info->name;
 
+  
   #global $db;
   $username = $email;
+  $_SESSION['user'] = $username;
   addUser($username, $name);
-  
+  header("Location: add-recipe.php");
+
   // now you can use this profile info to create account in your website and make user logged in. 
 } else {
   //echo "<a href='".$client->createAuthUrl()."'>Google Login</a>";

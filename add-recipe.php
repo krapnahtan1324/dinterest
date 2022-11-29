@@ -2,7 +2,7 @@
 require("connect-db.php");
 require("recipe-db.php");
 require("base.php");
-require_once("config.php");
+//require_once("config.php");
 
 $list_of_recipes = getAllRecipes();
 $recipe_to_update = null; 
@@ -118,7 +118,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
   </form>
   </nav> -->
-
+  <div>
+    <?php
+    if (isset($_SESSION['user'])) {
+      echo $_SESSION['user'];
+    } else {
+      echo "Not in session";
+    }
+    ?>
+  </div>
 
   <!-- Add Recipe -->
   <div class="container">
