@@ -103,6 +103,75 @@ function getAllRecipes()
     return $result; 
 }
 
+
+function getEntrees()
+{
+    global $db; 
+    $query = "SELECT * FROM Recipe NATURAL JOIN Entree";
+    $statement = $db->prepare($query); 
+    $statement->execute(); 
+    $result = $statement->fetchAll(); 
+    // fetchAll fetches all the rows that you got as a result of running the query 
+    // fetch() only retrieves 1 row 
+    $statement->closeCursor(); 
+    return $result; 
+}
+
+
+function getAppetizers()
+{
+    global $db; 
+    $query = "SELECT * FROM Recipe NATURAL JOIN Appetizer";
+    $statement = $db->prepare($query); 
+    $statement->execute(); 
+    $result = $statement->fetchAll(); 
+    // fetchAll fetches all the rows that you got as a result of running the query 
+    // fetch() only retrieves 1 row 
+    $statement->closeCursor(); 
+    return $result; 
+}
+
+
+function getDrinks()
+{
+    global $db; 
+    $query = "SELECT * FROM Recipe NATURAL JOIN Drink";
+    $statement = $db->prepare($query); 
+    $statement->execute(); 
+    $result = $statement->fetchAll(); 
+    // fetchAll fetches all the rows that you got as a result of running the query 
+    // fetch() only retrieves 1 row 
+    $statement->closeCursor(); 
+    return $result; 
+}
+
+function getDesserts()
+{
+    global $db; 
+    $query = "SELECT * FROM Recipe NATURAL JOIN Dessert";
+    $statement = $db->prepare($query); 
+    $statement->execute(); 
+    $result = $statement->fetchAll(); 
+    // fetchAll fetches all the rows that you got as a result of running the query 
+    // fetch() only retrieves 1 row 
+    $statement->closeCursor(); 
+    return $result; 
+}
+
+
+function getUserRecipes($username)
+{
+    global $db; 
+    $query = "SELECT * FROM Recipe NATURAL JOIN Created_by WHERE username = '$username'";
+    $statement = $db->prepare($query); 
+    $statement->execute(); 
+    $result = $statement->fetchAll(); 
+    // fetchAll fetches all the rows that you got as a result of running the query 
+    // fetch() only retrieves 1 row 
+    $statement->closeCursor(); 
+    return $result; 
+}
+
 function getAllRecipeIngredients()
 {
     global $db; 
@@ -151,27 +220,141 @@ function addRecipeType($recipe_id, $type, $recipeType){
 
 }
 
-function addUser($username, $password, $name) {
+function addUser($username, $name) {
     global $db;
-    $query = "INSERT INTO User VALUES (:username, :password, :name)";
+    $query = "SELECT * FROM User WHERE username = '$username'";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $result = $statement->fetch();
+    $statement->closeCursor();
+    if ($result) {
+        #header('Location: recipe.php');
+    } else {
+        $query = "INSERT INTO User VALUES (:username, :name)";
 
-    try {
-        $statement = $db->prepare($query);
-        $statement->bindValue(':username', $username);
-        $statement->bindValue(':password', $password);
-        $statement->bindValue(':name', $name);
-        $statement->execute();
-        $statement->closeCursor();
-    } catch (PDOException $e) {
-        if ($statement->rowCount() == 0)
-            echo "Failed to add user <br/"; 
-    } catch (Exception $e) {
-        echo $e->getMessage(); 
+        try {
+            $statement = $db->prepare($query);
+            $statement->bindValue(':username', $username);
+            $statement->bindValue(':name', $name);
+            $statement->execute();
+            $statement->closeCursor();
+        } catch (PDOException $e) {
+            if ($statement->rowCount() == 0)
+                echo "Failed to add user <br/"; 
+        } catch (Exception $e) {
+            echo $e->getMessage(); 
+        }
     }
 
 
 }
 
+//add the recipe id and the recipe creator to the Created_by table
+function addCreatedBy($recipe_id, $username) 
+{
+    global $db; 
+    $query = "INSERT INTO Created_by VALUES (:recipe_id, :username)";  
+    try {
+    $statement = $db->prepare($query); 
+    $statement->bindValue(':recipe_id', $recipe_id); 
+    $statement->bindValue(':username', $username);
+   
+    $statement->execute(); 
+    $statement->closeCursor(); 
+    }
+    catch (PDOException $e)
+    {
+        if ($statement->rowCount() == 0)
+            echo "Failed to add to Created_by <br/"; 
+    }
+    catch (Exception $e)
+    {
+        echo $e->getMessage(); 
+    }
+}
 
+
+
+function deleteRecipe($recipe_id) {
+    global $db;
+    $query = "DELETE FROM Recipe WHERE recipe_id = :recipe_id";
+
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':recipe_id', $recipe_id);
+        $statement->execute();
+
+        #echo "number of rows affected = " . $statement->rowCount() . "##";
+
+        if ($statement->rowCount() == 1) {
+            #echo "Deleted successfully <br/>";
+        }
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+
+}
+
+function getRecipeByID($recipe_id) {
+    global $db;
+    $query = "SELECT * FROM Recipe rp 
+    INNER JOIN Recipe_ingredients ri ON rp.recipe_id = ri.recipe_id 
+    INNER JOIN Filterable_characteristics fc ON rp.recipe_id = fc.recipe_id
+    WHERE rp.recipe_id = :recipe_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':recipe_id', $recipe_id);
+    $statement->execute();
+    $result = $statement->fetch(); 
+    $statement->closeCursor();    
+    return $result;
+}
+
+
+function editRecipe($recipe_id, $recipe_name, $instructions, $ingredients, $cuisine, $servings, $total_time) {
+    global $db;
+    $query = "UPDATE Recipe SET recipe_name=:recipe_name, instructions=:instructions WHERE recipe_id=:recipe_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':recipe_id', $recipe_id);
+        $statement->bindValue(':recipe_name', $recipe_name);
+        $statement->bindValue(':instructions', $instructions);
+        $statement->execute();
+
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        echo "recipe not working";
+    }
+
+    $query = "UPDATE Recipe_ingredients SET ingredients=:ingredients WHERE recipe_id=:recipe_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':recipe_id', $recipe_id);
+        $statement->bindValue(':ingredients', $ingredients);
+        $statement->execute();
+
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        echo "ingredients not working";
+    }
+
+    $query = "UPDATE Filterable_characteristics SET cuisine=:cuisine, servings=:servings, total_time=:total_time WHERE recipe_id=:recipe_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':recipe_id', $recipe_id);
+        $statement->bindValue(':cuisine', $cuisine);
+        $statement->bindValue(':servings', $servings);
+        $statement->bindValue(':total_time', $total_time);
+        $statement->execute();
+
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        echo "char not working";
+    }
+
+}
 
 ?>
