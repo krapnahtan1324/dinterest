@@ -5,7 +5,8 @@ require("base.php");
 //require_once("config.php");
 
 $list_of_recipes = getAllRecipes();
-$recipe_to_update = null; 
+$recipe_to_update = null;
+$recipe_to_update2 = null; 
 $recipeingredients_to_update = null;
 ?> 
 
@@ -46,13 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
     // If you plan on having a lot of commands, separate SQL into a separate file 
     if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Update')
     {
-      $recipe_to_update = getRecipeByName($_POST['recipe_to_update']); 
+      $recipe_to_update = getRecipeByID($_POST['recipe_to_update']); 
+      $recipe_to_update2 = getRecipeType($_POST['recipe_to_update2']);
       // $recipe_ingredients_to_update = getRecipe_ingredients($_POST['recipe_ingredients_to_update']);
     }
     if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Confirm update') // Making sure there's actually something 
     // to update 
     {
-      editRecipe($_POST['recipe_name'], $_POST['recipe_id'], $_POST['instructions'], $_POST['ingredients']);
+      editRecipe($_POST['recipe_name'], $_POST['recipe_id'], $_POST['instructions'], $_POST['ingredients'], $_POST['cuisine'], $_POST['servings'], $_POST['total_time']);
       // editRecipe_ingredients($_POST['ingredients'])
       // Extract the information from the input boxes and pass it into the function
       $list_of_recipes = getAllRecipes(); // SELECT * from the table and display the info again
@@ -168,8 +170,8 @@ method: Allows yout to specify how the form data should be packaged
   <div class="row mb-3 mx-3"> 
     Ingredients: 
     <input type="text" class="form-control" name="ingredients" required 
-    value="<?php if ($recipeingredients_to_update
-  != null) echo $recipeingredients_to_update
+    value="<?php if ($recipe_to_update
+  != null) echo $recipe_to_update
   ['ingredients'] ?>"
     />
 </div>
@@ -213,7 +215,9 @@ method: Allows yout to specify how the form data should be packaged
 <!-- Select the type of recipe it is so we know which database it needs to go into -->
 <div class="row mb-3 mx-3"> 
   Select Recipe Category: 
-<select name = "type"> 
+<select name = "type"  >
+<!-- selectedIndex = "<?php if ($recipe_to_update2 != null) echo 
+  $recipe_to_update2[0]?>" -->
   <option value = "">Select...</option>
   <option value = "Drink">Drink</option> 
   <option value = "Appetizer">Appetizer</option>
@@ -226,9 +230,8 @@ method: Allows yout to specify how the form data should be packaged
 <div class = "row mb-3 mx-3"> 
   Type of Recipe: 
   <input type="text" class="form-control" name="recipeType" required
-  value="<?php if ($recipe_to_update
-  != null) echo $recipe_to_update
-  ['recipeType'] ?>"
+  value="<?php if ($recipe_to_update2
+  != null) echo $recipe_to_update2[1][$recipe_to_update2[0]] ?>"
   />
 </div>
 
@@ -277,9 +280,10 @@ method: Allows yout to specify how the form data should be packaged
       <input type="submit" value="Update" name="btnAction" class="btn btn-primary"
         title="Click to update this recipe" /> <!-- title attribute will display when mouse hovers over it -->
       <input type="hidden" name="recipe_to_update" 
-        value="<?php echo $recipe_info['recipe_name']; ?>"
+        value="<?php echo $recipe_info['recipe_id']; ?>"
       />
       <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen --> 
+    
     </form>
   </td> 
   <!-- DELETE BUTTON --> 

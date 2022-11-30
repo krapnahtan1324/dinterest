@@ -180,12 +180,108 @@ function addUser($username, $name) {
 
 }
 
-function getRecipeByName($recipe_name)  
-{
+function getRecipeType($recipe_id){
+    global $db; 
+    try{
+        $query1 = "SELECT * FROM Drink dk WHERE dk.recipe_id = :recipe_id";
+        $statement1 = $db->prepare($query1);
+        $statement1->bindValue(':recipe_id', $recipe_id);
+        $statement1->execute();
+        $result1 = $statement1->fetch();
+        $statement1->closeCursor();
+
+    } catch (Exception $e) {
+        echo "problem in result1";
+    }
+    
+    try{
+        $query2 = "SELECT * FROM Appetizer a WHERE a.recipe_id = :recipe_id";
+        $statement2 = $db->prepare($query2);
+        $statement2->bindValue(':recipe_id', $recipe_id);
+        $statement2->execute();
+        $result2 = $statement2->fetch();
+        $statement2->closeCursor();
+
+    } catch (Exception $e) {
+        echo "problem in result2";
+    }
+
+    try{
+        $query3 = "SELECT * FROM Entree e WHERE e.recipe_id = :recipe_id";
+        $statement3 = $db->prepare($query3);
+        $statement3->bindValue(':recipe_id', $recipe_id);
+        $statement3->execute();
+        $result3 = $statement3->fetch();
+        $statement3->closeCursor();
+
+    } catch (Exception $e) {
+        echo "problem in result3";
+    }
+
+    try{
+        $query4 = "SELECT * FROM Dessert dt WHERE dt.recipe_id = :recipe_id";
+        $statement4 = $db->prepare($query4);
+        $statement4->bindValue(':recipe_id', $recipe_id);
+        $statement4->execute();
+        $result4 = $statement4->fetch();
+        $statement4->closeCursor();
+
+    } catch (Exception $e) {
+        echo "problem in result4";
+    }
+
+    if($result1) {
+        echo "Drink";
+        return array("Drink", $result1);
+    }
+    else if($result2){
+        echo "Appetizer";
+        return array("Appetizer", $result2);
+    }
+    else if($result3){
+        echo "Entree";
+        return array("Entree", $result3);
+    }
+    else if($result4){
+        echo "Dessert";
+        return array("Dessert", $result4);
+    } else {
+        echo $result1;
+        echo "Not found";
+    }
+    // else{
+    //     return "something is wrong";
+    // }
+
+    // if ($type == 'Drink'){
+    //     $query = "SELECT * FROM Drink";
+    // }
+    // else if ($type == 'Appetizer'){
+    //     $query = "SELECT * FROM Appetizer";
+    // }
+    // else if ($type == 'Entree'){
+    //     $query = "SELECT * FROM Entree";
+    // }
+    // else if ($type == 'Dessert'){
+    //     $query = "SELECT * FROM Dessert";
+    // }
+
+    // $statement = $db->prepare($query); 
+    // $statement->bindValue(':recipe_id', $recipe_id);  
+    // $statement->execute(); // Tell DBMS to actually run 
+    // $result = $statement->fetch();
+    // $statement->closeCursor(); // We executed the query so release it so other users can make use of that instance
+
+}
+
+function getRecipeByID($recipe_id) {
     global $db;
-    $query = "SELECT * FROM Recipe rp INNER JOIN Recipe_ingredients ri where rp.recipe_name = :recipe_name";
+    $query = "SELECT * FROM Recipe rp 
+    INNER JOIN Recipe_ingredients ri ON rp.recipe_id = ri.recipe_id 
+    INNER JOIN Filterable_characteristics fc ON rp.recipe_id = fc.recipe_id
+    WHERE rp.recipe_id = :recipe_id";
     $statement = $db->prepare($query);
-    $statement->bindValue(':recipe_name', $recipe_name);
+    $statement->bindValue(':recipe_id', $recipe_id);
     $statement->execute();
     $result = $statement->fetch(); 
     $statement->closeCursor();    
@@ -193,36 +289,64 @@ function getRecipeByName($recipe_name)
 }
 
 
-function editRecipe($recipe_id, $recipe_name, $instructions, $ingredients) {
+function editRecipe($recipe_id, $recipe_name, $instructions, $ingredients, $cuisine, $servings, $total_time) {
     global $db;
-    $query = "UPDATE Recipe rp
-    INNER JOIN Recipe_ingredients ri
-      ON rp.recipe_id = ri.recipe_id
-    SET rp.recipe_name =:recipe_name, rp.instructions=:instructions, 
-        ri.ingredients=:ingredients, rp.recipe_id=:recipe_id 
-    WHERE rp.recipe_name =:recipe_name";
+    $query = "UPDATE Recipe SET recipe_name=:recipe_name, instructions=:instructions WHERE recipe_id=:recipe_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':recipe_name', $recipe_name);
+        $statement->bindValue(':instructions', $instructions);
+        $statement->execute();
+
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        echo "recipe not working";
+    }
+
+    $query = "UPDATE Recipe_ingredients SET ingredients=:ingredients WHERE recipe_id=:recipe_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':ingredients', $ingredients);
+        $statement->execute();
+
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        echo "ingredients not working";
+    }
+
+    $query = "UPDATE Filterable_characteristics SET cuisine=:cuisine, servings=:servings, total_time=:total_time WHERE recipe_id=:recipe_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':cuisine', $cuisine);
+        $statement->bindValue(':servings', $servings);
+        $statement->bindValue(':total_time', $total_time);
+        $statement->execute();
+
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        echo "char not working";
+    }
+
+
     // $query = "SELECT * FROM Recipe NATURAL JOIN Recipe_ingredients";
-    $statement = $db->prepare($query);
-    $statement->bindValue(':recipe_id', $recipe_id);
-    $statement->bindValue(':ingredients', $ingredients);
-    $statement->bindValue(':recipe_name', $recipe_name);
-    $statement->bindValue(':instructions', $instructions);
-    $statement->execute();
-    $statement->closeCursor();
+   
 }
 
 
-function getRecipe_ingredients($recipe_id) {
-    global $db;
-    $query = "SELECT * FROM Recipe_ingredients where recipe_id = :recipe_id";
-    $statement = $db->prepare($query);
-    $statement->bindValue(':recipe_id', $recipe_id);
-    $statement->execute();
-    $result = $statement->fetch(); 
-    $statement->closeCursor();    
-    return $result;
+// function getRecipe_ingredients($recipe_id) {
+//     global $db;
+//     $query = "SELECT * FROM Recipe_ingredients where recipe_id = :recipe_id";
+//     $statement = $db->prepare($query);
+//     $statement->bindValue(':recipe_id', $recipe_id);
+//     $statement->execute();
+//     $result = $statement->fetch(); 
+//     $statement->closeCursor();    
+//     return $result;
 
-}
+// }
 
 
 ?>
