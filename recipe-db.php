@@ -240,30 +240,65 @@ function deleteRecipe($recipe_id) {
 
 }
 
-
-function addRating($recipe_id, $username, $rating)
-{
+function getRecipeByID($recipe_id) {
     global $db;
-    $query = "INSERT INTO Rating VALUES (:recipe_id, :username, :rating_id, :rating)";
-
-    try {
+    $query = "SELECT * FROM Recipe rp 
+    INNER JOIN Recipe_ingredients ri ON rp.recipe_id = ri.recipe_id 
+    INNER JOIN Filterable_characteristics fc ON rp.recipe_id = fc.recipe_id
+    WHERE rp.recipe_id = :recipe_id";
     $statement = $db->prepare($query);
-    $statement->bindValue(':recipe_id', $recipes_id);
-    $statement->bindValue(':username', $username);
-    $statement->bindValue(':rating_id', $recipe_id);
-    $statement->bindValue(':rating', $rating);
+    $statement->bindValue(':recipe_id', $recipe_id);
     $statement->execute();
-    $statement->closeCursor();
-    }
-    catch (PDOException $e)
-    {
-        if ($statement->rowCount() == 0)
-            echo "Failed to add a rating <br/";
-    }
-    catch (Exception $e)
-    {
+    $result = $statement->fetch(); 
+    $statement->closeCursor();    
+    return $result;
+}
+
+
+function editRecipe($recipe_id, $recipe_name, $instructions, $ingredients, $cuisine, $servings, $total_time) {
+    global $db;
+    $query = "UPDATE Recipe SET recipe_name=:recipe_name, instructions=:instructions WHERE recipe_id=:recipe_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':recipe_id', $recipe_id);
+        $statement->bindValue(':recipe_name', $recipe_name);
+        $statement->bindValue(':instructions', $instructions);
+        $statement->execute();
+
+        $statement->closeCursor();
+    } catch (PDOException $e) {
         echo $e->getMessage();
+        echo "recipe not working";
     }
+
+    $query = "UPDATE Recipe_ingredients SET ingredients=:ingredients WHERE recipe_id=:recipe_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':recipe_id', $recipe_id);
+        $statement->bindValue(':ingredients', $ingredients);
+        $statement->execute();
+
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        echo "ingredients not working";
+    }
+
+    $query = "UPDATE Filterable_characteristics SET cuisine=:cuisine, servings=:servings, total_time=:total_time WHERE recipe_id=:recipe_id";
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':recipe_id', $recipe_id);
+        $statement->bindValue(':cuisine', $cuisine);
+        $statement->bindValue(':servings', $servings);
+        $statement->bindValue(':total_time', $total_time);
+        $statement->execute();
+
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        echo "char not working";
+    }
+
 }
 
 ?>

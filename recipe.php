@@ -108,22 +108,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="showrecipe">
     <h3> List of Recipes</h3>
     <div class="row justify-content-center">  
-    <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
-    <thead> <!-- For the table set up the header --> 
-    <tr style="background-color:#B0B0B0">
-        <th width="10%"><b>Recipe_id</b></th>       
-        <th width="20%"><b>Name</b></th>      
-        <th width="40%"><b>Instructions</b></th>
-        <th width="10%"></th>
-    </tr>
-    </thead>
+    
 <?php
       // (B2) DISPLAY RESULTS
-      if (count($results) > 0) { 
+      if (count($results) > 0) { ?>
 
-        // printf("<div>%s - %s</div>", $r["recipe_name"]);
-        
-        // printf($r["recipe_name"]);
+      <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
+          <thead> <!-- For the table set up the header --> 
+          <tr style="background-color:#B0B0B0">
+              <th width="10%"><b>Recipe_id</b></th>       
+              <th width="20%"><b>Name</b></th>      
+              <th width="40%"><b>Instructions</b></th>
+              <th width="10%"></th>
+          </tr>
+          </thead>
+        <?php
         foreach ($results as $recipe_info) { ?>
         <tr class="recipe">
           <td><?php echo $recipe_info['recipe_id']; ?></td>
@@ -139,18 +138,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           </td>  
         </tr>
 
-        <?php }
-
+        <?php } ?>
+        </table>
+    <?php
     } else { ?>
 
       <p>No results found.<br></p>
-      </table>
-    </div>
-    </div>
+    
     
     <?php
     }
-    unset($_POST["search"]);
+    unset($_POST["search"]); ?>
+      </div>
+      </div>
+    <?php
     } else { ?>
 <!-- If user not searching -->
 <div class="showrecipe">

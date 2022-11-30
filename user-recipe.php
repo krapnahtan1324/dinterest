@@ -71,17 +71,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
     
 
     // If you plan on having a lot of commands, separate SQL into a separate file 
-    // else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Update')
-    // {
-    //   $recipe_to_update = getrecipeByName($_POST['recipe_to_update']); 
-    // }
-    // else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Confirm update') // Making sure there's actually something 
-    // // to update 
-    // {
-    //   updaterecipe($_POST['recipe_name'], $_POST['major'], $_POST['year']);
-    //   // Extract the information from the input boxes and pass it into the function
-    //   $list_of_recipes = getAllRecipes(); // SELECT * from the table and display the info again
-    // }
+    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Update')
+    {
+      $recipe_to_update = getrecipeByID($_POST['recipe_to_update']); 
+    }
+    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Confirm update') // Making sure there's actually something 
+    // to update 
+    {
+      editRecipe($_POST['recipe_id'], $_POST['recipe_name'], $_POST['instructions'], $_POST['ingredients'], $_POST['cuisine'], $_POST['servings'], $_POST['total_time']);
+      // Extract the information from the input boxes and pass it into the function
+      $list_of_recipes = getUserRecipes($_SESSION['user']); // SELECT * from the table and display the info again
+    }
     else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Delete') 
     {
       deleteRecipe($_POST['recipe_to_delete']);
@@ -145,8 +145,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
   </form>
   </nav> -->
-<h2>
-    <?php echo"Hi {$_SESSION['name']}"?>
+<br>
+<h2 class="text-center" style="text-decoration: underline">
+    <?php echo "{$_SESSION['name']}"?>
 </h2>
 
   <!-- Add Recipe -->
@@ -189,8 +190,8 @@ method: Allows yout to specify how the form data should be packaged
   <div class="row mb-3 mx-3"> 
     Ingredients: 
     <input type="text" class="form-control" name="ingredients" required
-    value="<?php if ($recipeingredients_to_update
-  != null) echo $recipeingredients_to_update
+    value="<?php if ($recipe_to_update
+  != null) echo $recipe_to_update
   ['ingredients'] ?>"
     />
 </div>
@@ -246,11 +247,7 @@ method: Allows yout to specify how the form data should be packaged
 <!-- Write the type of recipe it is --> 
 <div class = "row mb-3 mx-3"> 
   Type of Recipe: 
-  <input type="text" class="form-control" name="recipeType" required
-  value="<?php if ($recipe_to_update
-  != null) echo $recipe_to_update
-  ['recipeType'] ?>"
-  />
+  <input type="text" class="form-control" name="recipeType" required/>
 </div>
 
 
@@ -296,7 +293,7 @@ method: Allows yout to specify how the form data should be packaged
         <th width="10%"><b>Recipe_id</b></th>       
         <th width="20%"><b>Name</b></th>      
         <th width="40%"><b>Instructions</b></th>  
-        <th><b>Update?</b></th>
+        <th style="padding-left:10px"><b>Update?</b></th>
         <th><b>Delete?</b></th>
         <th></th>
     </tr>
@@ -313,7 +310,7 @@ method: Allows yout to specify how the form data should be packaged
           <td><?php echo $recipe_info['recipe_id']; ?></td>
           <td><?php echo $recipe_info['recipe_name']; ?></td>        
     <td><?php echo $recipe_info['instructions']; ?></td>  
-    <td>
+    <td style="padding-left:10px">
       <form action="user-recipe.php" method="post">
     <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
       <input type="submit" value="Update" name="btnAction" class="btn btn-primary"
@@ -369,7 +366,7 @@ method: Allows yout to specify how the form data should be packaged
     <th width="10%"><b>Recipe_id</b></th>       
     <th width="20%"><b>Name</b></th>      
     <th width="40%"><b>Instructions</b></th>
-    <th><b>Update?</b></th>
+    <th style="padding-left:10px"><b>Update?</b></th>
     <th><b>Delete?</b></th>
     <th></th>
   </tr>
@@ -380,7 +377,7 @@ method: Allows yout to specify how the form data should be packaged
     <td><?php echo $recipe_info['recipe_id']; ?></td>
     <td><?php echo $recipe_info['recipe_name']; ?></td>        
     <td><?php echo $recipe_info['instructions']; ?></td>  
-    <td>
+    <td style="padding-left:10px">
       <form action="user-recipe.php" method="post">
     <!-- As soon as the button is clicked, send a request to simpleform.php so it can update  -->
       <input type="submit" value="Update" name="btnAction" class="btn btn-primary"
