@@ -76,12 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
     //   // Extract the information from the input boxes and pass it into the function
     //   $list_of_recipes = getAllRecipes(); // SELECT * from the table and display the info again
     // }
-    // else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Delete') 
-    // {
-    //   deleterecipe($_POST['recipe_to_delete']);
-    //   // Extract the information from the input boxes and pass it into the function
-    //   $list_of_recipes = getAllRecipes(); // SELECT * from the table and display the info again
-    // }
+    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Delete') 
+    {
+      deleteRecipe($_POST['recipe_to_delete']);
+      // Extract the information from the input boxes and pass it into the function
+      $list_of_recipes = getUserRecipes($_SESSION['user']); // SELECT * from the table and display the info again
+    }
 }
 ?>
 <!-- 1. create HTML5 doctype -->
@@ -159,7 +159,7 @@ method: Allows yout to specify how the form data should be packaged
 
 <div class="row mb-3 mx-3"> 
     Recipe ID: 
-    <input type="text" class="form-control" name="recipe_id" required 
+    <input type="number" class="form-control" name="recipe_id" required 
     value="<?php if ($recipe_to_update
   != null) echo $recipe_to_update
   ['recipe_id'] ?>"
@@ -306,23 +306,23 @@ method: Allows yout to specify how the form data should be packaged
           <td><?php echo $recipe_info['recipe_name']; ?></td>        
     <td><?php echo $recipe_info['instructions']; ?></td>  
     <td>
-      <form action="add-recipe.php" method="post">
+      <form action="user-recipe.php" method="post">
     <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
       <input type="submit" value="Update" name="btnAction" class="btn btn-primary"
         title="Click to update this recipe" /> <!-- title attribute will display when mouse hovers over it -->
       <input type="hidden" name="recipe_to_update" 
-        value="<?php echo $recipe_info['recipe_name']; ?>"
+        value="<?php echo $recipe_info['recipe_id']; ?>"
       />
       <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen --> 
     </form>
   </td> 
   <!-- DELETE BUTTON --> 
-  <td><form action="add-recipe.php" method="post">
+  <td><form action="user-recipe.php" method="post">
     <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
       <input type="submit" value="Delete" name="btnAction" class="btn btn-danger" 
         title="Click to delete this recipe" /> <!-- title attribute will display when mouse hovers over it -->
       <input type="hidden" name="recipe_to_delete" 
-        value="<?php echo $recipe_info['recipe_name']; ?>" 
+        value="<?php echo $recipe_info['recipe_id']; ?>" 
       />
       <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen --> 
     </form></td>              
@@ -361,23 +361,23 @@ method: Allows yout to specify how the form data should be packaged
     <td><?php echo $recipe_info['recipe_name']; ?></td>        
     <td><?php echo $recipe_info['instructions']; ?></td>  
     <td>
-      <form action="add-recipe.php" method="post">
+      <form action="user-recipe.php" method="post">
     <!-- As soon as the button is clicked, send a request to simpleform.php so it can update  -->
       <input type="submit" value="Update" name="btnAction" class="btn btn-primary"
         title="Click to update this recipe" /> <!-- title attribute will display when mouse hovers over it -->
       <input type="hidden" name="recipe_to_update" 
-        value="<?php echo $recipe_info['recipe_name']; ?>"
+        value="<?php echo $recipe_info['recipe_id']; ?>"
       />
       <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen  -->
       </form>
   </td> 
   <!-- DELETE BUTTON  -->
-  <td><form action="add-recipe.php" method="post">
+  <td><form action="user-recipe.php" method="post">
     <!-- As soon as the button is clicked, send a request to simpleform.php so it can update  -->
       <input type="submit" value="Delete" name="btnAction" class="btn btn-danger" 
         title="Click to delete this recipe" /> <!--title attribute will display when mouse hovers over it -->
       <input type="hidden" name="recipe_to_delete" 
-        value="<?php echo $recipe_info['recipe_name']; ?>" 
+        value="<?php echo $recipe_info['recipe_id']; ?>" 
       />
       <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen  -->
     </form></td>              

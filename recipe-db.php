@@ -219,4 +219,26 @@ function addCreatedBy($recipe_id, $username)
 
 
 
+function deleteRecipe($recipe_id) {
+    global $db;
+    $query = "DELETE FROM Recipe WHERE recipe_id = :recipe_id";
+
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':recipe_id', $recipe_id);
+        $statement->execute();
+
+        #echo "number of rows affected = " . $statement->rowCount() . "##";
+
+        if ($statement->rowCount() == 1) {
+            #echo "Deleted successfully <br/>";
+        }
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+
+}
+
+
 ?>
