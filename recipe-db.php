@@ -241,4 +241,29 @@ function deleteRecipe($recipe_id) {
 }
 
 
+function addRating($recipe_id, $username, $rating)
+{
+    global $db;
+    $query = "INSERT INTO Rating VALUES (:recipe_id, :username, :rating_id, :rating)";
+
+    try {
+    $statement = $db->prepare($query);
+    $statement->bindValue(':recipe_id', $recipes_id);
+    $statement->bindValue(':username', $username);
+    $statement->bindValue(':rating_id', $recipe_id);
+    $statement->bindValue(':rating', $rating);
+    $statement->execute();
+    $statement->closeCursor();
+    }
+    catch (PDOException $e)
+    {
+        if ($statement->rowCount() == 0)
+            echo "Failed to add a rating <br/";
+    }
+    catch (Exception $e)
+    {
+        echo $e->getMessage();
+    }
+}
+
 ?>

@@ -1,5 +1,7 @@
 <style>
     nav {
+    padding-left: 10px;
+    padding-right: 10px;
     border-bottom: 2px solid #000;
     }
 </style>
