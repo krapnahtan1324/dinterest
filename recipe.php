@@ -64,7 +64,7 @@ $recipeingredients_to_update = null;
 <body>
   <!-- Nav Bar -->
   <!-- <nav class="navbar navbar-light bg-light justify-content-between">
-    <a class="navbar-brand" href="add-recipe.php">
+    <a class="navbar-brand" href="recipe.php">
       <img src="assets/DinterestLogo.png" width="30" height="30" class="d-inline-block align-top" alt="">
       Dinterest
     </a>
