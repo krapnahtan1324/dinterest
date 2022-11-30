@@ -55,13 +55,13 @@ require_once("config.php");
 <body>
   <!-- Nav Bar -->
   <nav class="navbar navbar-light bg-light navbar-expand-sm justify-content-between">
-    <a class="navbar-brand" href="add-recipe.php">
+    <a class="navbar-brand" href="recipe.php">
       <img src="assets/DinterestLogo.png" width="30" height="30" class="d-inline-block align-top" alt="">
       Dinterest
     </a>
     <ul class="navbar-nav">
         <li class="nav-item-active">
-            <a class="nav-link" href="add-recipe.php">All Recipes</a>
+            <a class="nav-link" href="recipe.php">All Recipes</a>
         </li>
         <li class="nav-item-active">
             <a class="nav-link" href="user-recipe.php">My Recipes</a>

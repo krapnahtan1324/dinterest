@@ -172,7 +172,7 @@ function addUser($username, $name) {
     $result = $statement->fetch();
     $statement->closeCursor();
     if ($result) {
-        header('Location: add-recipe.php');
+        #header('Location: recipe.php');
     } else {
         $query = "INSERT INTO User VALUES (:username, :name)";
 

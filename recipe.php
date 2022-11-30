@@ -77,7 +77,7 @@ $recipeingredients_to_update = null;
 <br><br>
 <!-- Search function -->
 <div class="text-center">
-<form method="post" action="add-recipe.php">
+<form method="post" action="recipe.php">
   <input type="text" name="search" placeholder="Look up recipes by name" required/>
   <input type="submit" value="Search"/>
 </form>
@@ -151,7 +151,8 @@ $recipeingredients_to_update = null;
 </div>
     <?php
     }
-?>  
+?>
+<br><br>  
 
     <!-- <?php echo "Hello World @^_^@"; ?> -->
 </body>

@@ -3,6 +3,6 @@
 session_start();
 unset($_SESSION['user']);
 session_destroy();
-header('Location: add-recipe.php');
+header('Location: recipe.php');
 
 ?>
