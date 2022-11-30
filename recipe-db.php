@@ -180,6 +180,49 @@ function addUser($username, $name) {
 
 }
 
+function getRecipeByName($recipe_name)  
+{
+    global $db;
+    $query = "SELECT * FROM Recipe rp INNER JOIN Recipe_ingredients ri where rp.recipe_name = :recipe_name";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':recipe_name', $recipe_name);
+    $statement->execute();
+    $result = $statement->fetch(); 
+    $statement->closeCursor();    
+    return $result;
+}
+
+
+function editRecipe($recipe_id, $recipe_name, $instructions, $ingredients) {
+    global $db;
+    $query = "UPDATE Recipe rp
+    INNER JOIN Recipe_ingredients ri
+      ON rp.recipe_id = ri.recipe_id
+    SET rp.recipe_name =:recipe_name, rp.instructions=:instructions, 
+        ri.ingredients=:ingredients, rp.recipe_id=:recipe_id 
+    WHERE rp.recipe_name =:recipe_name";
+    // $query = "SELECT * FROM Recipe NATURAL JOIN Recipe_ingredients";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':recipe_id', $recipe_id);
+    $statement->bindValue(':ingredients', $ingredients);
+    $statement->bindValue(':recipe_name', $recipe_name);
+    $statement->bindValue(':instructions', $instructions);
+    $statement->execute();
+    $statement->closeCursor();
+}
+
+
+function getRecipe_ingredients($recipe_id) {
+    global $db;
+    $query = "SELECT * FROM Recipe_ingredients where recipe_id = :recipe_id";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':recipe_id', $recipe_id);
+    $statement->execute();
+    $result = $statement->fetch(); 
+    $statement->closeCursor();    
+    return $result;
+
+}
 
 
 ?>

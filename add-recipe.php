@@ -44,17 +44,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
     
 
     // If you plan on having a lot of commands, separate SQL into a separate file 
-    // else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Update')
-    // {
-    //   $recipe_to_update = getrecipeByName($_POST['recipe_to_update']); 
-    // }
-    // else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Confirm update') // Making sure there's actually something 
-    // // to update 
-    // {
-    //   updaterecipe($_POST['recipe_name'], $_POST['major'], $_POST['year']);
-    //   // Extract the information from the input boxes and pass it into the function
-    //   $list_of_recipes = getAllRecipes(); // SELECT * from the table and display the info again
-    // }
+    if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Update')
+    {
+      $recipe_to_update = getRecipeByName($_POST['recipe_to_update']); 
+      // $recipe_ingredients_to_update = getRecipe_ingredients($_POST['recipe_ingredients_to_update']);
+    }
+    if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Confirm update') // Making sure there's actually something 
+    // to update 
+    {
+      editRecipe($_POST['recipe_name'], $_POST['recipe_id'], $_POST['instructions'], $_POST['ingredients']);
+      // editRecipe_ingredients($_POST['ingredients'])
+      // Extract the information from the input boxes and pass it into the function
+      $list_of_recipes = getAllRecipes(); // SELECT * from the table and display the info again
+      }
     // else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'Delete') 
     // {
     //   deleterecipe($_POST['recipe_to_delete']);
@@ -267,7 +269,8 @@ method: Allows yout to specify how the form data should be packaged
   <tr> 
     <td><?php echo $recipe_info['recipe_id']; ?></td>
     <td><?php echo $recipe_info['recipe_name']; ?></td>        
-    <td><?php echo $recipe_info['instructions']; ?></td>  
+    <td><?php echo $recipe_info['instructions']; ?></td> 
+    <td><?php echo $recipe_info['ingredients']; ?></td> 
     <td>
       <form action="add-recipe.php" method="post">
     <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
