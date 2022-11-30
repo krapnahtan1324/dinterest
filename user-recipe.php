@@ -88,6 +88,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') // standard object that keeps track of
       // Extract the information from the input boxes and pass it into the function
       $list_of_recipes = getUserRecipes($_SESSION['user']); // SELECT * from the table and display the info again
     }
+    else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      if (!empty($_POST['btnAction']) && $_POST['btnAction'] == 'More Info') {
+        #echo $_POST['recipe_to_view'];
+        $_SESSION['recipe'] = $_POST['recipe_to_view'];
+        header('Location: recipe-info.php');
+      }
+    }
 }
 ?>
 <!-- 1. create HTML5 doctype -->
@@ -287,74 +294,74 @@ method: Allows yout to specify how the form data should be packaged
     <div class="showrecipe">
     <h3> My Recipes</h3>
     <div class="row justify-content-center">  
-    <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
-    <thead> <!-- For the table set up the header --> 
-    <tr style="background-color:#B0B0B0">
-        <th width="10%"><b>Recipe_id</b></th>       
-        <th width="20%"><b>Name</b></th>      
-        <th width="40%"><b>Instructions</b></th>  
-        <th style="padding-left:10px"><b>Update?</b></th>
-        <th><b>Delete?</b></th>
-        <th></th>
-    </tr>
-    </thead>
+    
 <?php
       // (B2) DISPLAY RESULTS
-      if (count($results) > 0) { 
+      if (count($results) > 0) { ?>
 
-        // printf("<div>%s - %s</div>", $r["recipe_name"]);
-        
-        // printf($r["recipe_name"]);
+      <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
+          <thead> <!-- For the table set up the header --> 
+          <tr style="background-color:#B0B0B0">
+              <th width="10%"><b>Recipe_id</b></th>       
+              <th width="20%"><b>Name</b></th>      
+              <th width="40%"><b>Instructions</b></th>  
+              <th style="padding-left:10px"><b>Update?</b></th>
+              <th><b>Delete?</b></th>
+              <th></th>
+          </tr>
+          </thead>        
+        <?php
         foreach ($results as $recipe_info) { ?>
         <tr class="recipe">
           <td><?php echo $recipe_info['recipe_id']; ?></td>
           <td><?php echo $recipe_info['recipe_name']; ?></td>        
-    <td><?php echo $recipe_info['instructions']; ?></td>  
-    <td style="padding-left:10px">
-      <form action="user-recipe.php" method="post">
-    <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
-      <input type="submit" value="Update" name="btnAction" class="btn btn-primary"
-        title="Click to update this recipe" /> <!-- title attribute will display when mouse hovers over it -->
-      <input type="hidden" name="recipe_to_update" 
-        value="<?php echo $recipe_info['recipe_id']; ?>"
-      />
-      <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen --> 
-      </form>
-    </td> 
-    <!-- DELETE BUTTON --> 
-    <td><form action="user-recipe.php" method="post">
-      <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
-        <input type="submit" value="Delete" name="btnAction" class="btn btn-danger" 
-          title="Click to delete this recipe" /> <!-- title attribute will display when mouse hovers over it -->
-        <input type="hidden" name="recipe_to_delete" 
-          value="<?php echo $recipe_info['recipe_id']; ?>" 
-        />
-        <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen --> 
-      </form>
-    </td>
-    <td>
-      <form action="user-recipe.php" method="post">
-      <input type="submit" value="More Info" name="btnAction" class="btn btn-info"
-        title="Click to view more info" /> <!-- title attribute will display when mouse hovers over it -->
-      <input type="hidden" name="recipe_to_view" 
-        value="<?php echo $recipe_info['recipe_id']; ?>" />
-      </form>
-    </td>              
+          <td><?php echo $recipe_info['instructions']; ?></td>  
+          <td style="padding-left:10px">
+            <form action="user-recipe.php" method="post">
+          <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
+            <input type="submit" value="Update" name="btnAction" class="btn btn-primary"
+              title="Click to update this recipe" /> <!-- title attribute will display when mouse hovers over it -->
+            <input type="hidden" name="recipe_to_update" 
+              value="<?php echo $recipe_info['recipe_id']; ?>"
+            />
+            <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen --> 
+            </form>
+          </td> 
+          <!-- DELETE BUTTON --> 
+          <td><form action="user-recipe.php" method="post">
+            <!-- As soon as the button is clicked, send a request to simpleform.php so it can update --> 
+              <input type="submit" value="Delete" name="btnAction" class="btn btn-danger" 
+                title="Click to delete this recipe" /> <!-- title attribute will display when mouse hovers over it -->
+              <input type="hidden" name="recipe_to_delete" 
+                value="<?php echo $recipe_info['recipe_id']; ?>" 
+              />
+              <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen --> 
+            </form>
+          </td>
+          <td>
+            <form action="user-recipe.php" method="post">
+            <input type="submit" value="More Info" name="btnAction" class="btn btn-info"
+              title="Click to view more info" />
+            <input type="hidden" name="recipe_to_view" 
+              value="<?php echo $recipe_info['recipe_id']; ?>" />
+            </form>
+          </td>              
         </tr>
 
-        <?php }
-
+        <?php } ?>
+        </table>
+    <?php
     } else { ?>
 
       <p>No results found.<br></p>
-      </table>
 
-    </div>
-    </div>
     
     <?php
     }
-    unset($_POST["search"]);
+    unset($_POST["search"]); ?>
+      </div>
+      </div>
+    <?php
     } else { ?>
 
 <div class="showrecipe">
@@ -399,7 +406,7 @@ method: Allows yout to specify how the form data should be packaged
       <!-- hidden input is submitted when the form is submitted, but it's not shown on the screen  -->
     </form></td>
     <td>
-      <form action="recipe.php" method="post">
+      <form action="user-recipe.php" method="post">
       <input type="submit" value="More Info" name="btnAction" class="btn btn-info"
         title="Click to view more info" /> <!-- title attribute will display when mouse hovers over it -->
       <input type="hidden" name="recipe_to_view" 
@@ -414,13 +421,10 @@ method: Allows yout to specify how the form data should be packaged
     <?php
     }
 ?>
-
-
-
   
 <br>
 <br>
-    <!-- <?php echo "Hello World @^_^@"; ?> -->
+
 </body>
 
 </html>

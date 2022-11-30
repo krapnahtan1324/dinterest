@@ -103,6 +103,62 @@ function getAllRecipes()
     return $result; 
 }
 
+
+function getEntrees()
+{
+    global $db; 
+    $query = "SELECT * FROM Recipe NATURAL JOIN Entree";
+    $statement = $db->prepare($query); 
+    $statement->execute(); 
+    $result = $statement->fetchAll(); 
+    // fetchAll fetches all the rows that you got as a result of running the query 
+    // fetch() only retrieves 1 row 
+    $statement->closeCursor(); 
+    return $result; 
+}
+
+
+function getAppetizers()
+{
+    global $db; 
+    $query = "SELECT * FROM Recipe NATURAL JOIN Appetizer";
+    $statement = $db->prepare($query); 
+    $statement->execute(); 
+    $result = $statement->fetchAll(); 
+    // fetchAll fetches all the rows that you got as a result of running the query 
+    // fetch() only retrieves 1 row 
+    $statement->closeCursor(); 
+    return $result; 
+}
+
+
+function getDrinks()
+{
+    global $db; 
+    $query = "SELECT * FROM Recipe NATURAL JOIN Drink";
+    $statement = $db->prepare($query); 
+    $statement->execute(); 
+    $result = $statement->fetchAll(); 
+    // fetchAll fetches all the rows that you got as a result of running the query 
+    // fetch() only retrieves 1 row 
+    $statement->closeCursor(); 
+    return $result; 
+}
+
+function getDesserts()
+{
+    global $db; 
+    $query = "SELECT * FROM Recipe NATURAL JOIN Dessert";
+    $statement = $db->prepare($query); 
+    $statement->execute(); 
+    $result = $statement->fetchAll(); 
+    // fetchAll fetches all the rows that you got as a result of running the query 
+    // fetch() only retrieves 1 row 
+    $statement->closeCursor(); 
+    return $result; 
+}
+
+
 function getUserRecipes($username)
 {
     global $db; 

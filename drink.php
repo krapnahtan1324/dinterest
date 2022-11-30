@@ -12,12 +12,15 @@
 
 
 <?php
+
 require("connect-db.php");
 require("recipe-db.php");
 require("base.php");
-//require_once("config.php");
 
-$list_of_recipes = getAllRecipes();
+
+$list_of_recipes = getDrinks();
+$recipe_to_update = null; 
+$recipeingredients_to_update = null; 
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -28,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 }
 
-
 ?>
+
 
 <!-- 1. create HTML5 doctype -->
 <!DOCTYPE html>
@@ -77,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
   <!-- Nav Bar -->
   <!-- <nav class="navbar navbar-light bg-light justify-content-between">
-    <a class="navbar-brand" href="recipe.php">
+    <a class="navbar-brand" href="add-recipe.php">
       <img src="assets/DinterestLogo.png" width="30" height="30" class="d-inline-block align-top" alt="">
       Dinterest
     </a>
@@ -87,107 +90,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   </form>
   </nav> -->
 
-<br><br>
-<!-- Search function -->
-<div class="text-center">
-<form method="post" action="recipe.php">
-  <input type="text" name="search" placeholder="Look up recipes by name" required/>
-  <input type="submit" value="Search"/>
-</form>
-</div>
-
-
-<?php
-    // (B) PROCESS SEARCH WHEN FORM SUBMITTED
-    if (isset($_POST["search"])) {
-      // (B1) SEARCH FOR USERS
-      require "search.php";
-?>
-    <div class="showrecipe">
-    <h3> List of Recipes</h3>
-    <div class="row justify-content-center">  
-    
-<?php
-      // (B2) DISPLAY RESULTS
-      if (count($results) > 0) { ?>
-
-      <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
-          <thead> <!-- For the table set up the header --> 
-          <tr style="background-color:#B0B0B0">
-              <th width="10%"><b>Recipe_id</b></th>       
-              <th width="20%"><b>Name</b></th>      
-              <th width="40%"><b>Instructions</b></th>
-              <th width="10%"></th>
-          </tr>
-          </thead>
-        <?php
-        foreach ($results as $recipe_info) { ?>
-        <tr class="recipe">
-          <td><?php echo $recipe_info['recipe_id']; ?></td>
-          <td><?php echo $recipe_info['recipe_name']; ?></td>        
-          <td><?php echo $recipe_info['instructions']; ?></td>
-          <td style="padding-left:20px;">
-            <form action="recipe.php" method="post">
-            <input type="submit" value="More Info" name="btnAction" class="btn btn-info"
-              title="Click to view more info" />
-            <input type="hidden" name="recipe_to_view" 
-              value="<?php echo $recipe_info['recipe_id']; ?>" />
-            </form>
-          </td>  
-        </tr>
-
-        <?php } ?>
-        </table>
-    <?php
-    } else { ?>
-
-      <p>No results found.<br></p>
-    
-    
-    <?php
-    }
-    unset($_POST["search"]); ?>
-      </div>
-      </div>
-    <?php
-    } else { ?>
-<!-- If user not searching -->
+<br>
 <div class="showrecipe">
-<h3> List of Recipes</h3> 
+<h3> Drinks</h3> 
 <div class="row justify-content-center">  
 <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
   <thead> <!-- For the table set up the header --> 
   <tr style="background-color:#B0B0B0">
     <th width="10%"><b>Recipe_id</b></th>       
     <th width="20%"><b>Name</b></th>      
-    <th width="40%"><b>Instructions</b></th>
+    <th width="30%"><b>Instructions</b></th>
+    <th style="padding-left:40px" width="20%"><b>Drink Type</th>
     <th width="10%"></th>
   </tr>
   </thead>
-
 <?php foreach ($list_of_recipes as $recipe_info): ?> <!-- Call each row as recipe_info -->
   <tr class="recipe"> 
     <td><?php echo $recipe_info['recipe_id']; ?></td>
     <td><?php echo $recipe_info['recipe_name']; ?></td>        
     <td><?php echo $recipe_info['instructions']; ?></td>
+    <td style="padding-left:40px"><?php echo $recipe_info['drinkType']; ?></td>
     <td style="padding-left:20px;">
-      <form action="recipe.php" method="post">
+      <form action="drink.php" method="post">
       <input type="submit" value="More Info" name="btnAction" class="btn btn-info"
         title="Click to view more info" /> <!-- title attribute will display when mouse hovers over it -->
       <input type="hidden" name="recipe_to_view" 
         value="<?php echo $recipe_info['recipe_id']; ?>" />
       </form>
-    </td>
+    </td>  
+                  
   </tr>
 <?php endforeach; ?>
 </table>
 </div>
 </div>
-    <?php
-    }
-?>
-<br><br>  
 
+<br><br>
 </body>
 
 </html>

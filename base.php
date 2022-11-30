@@ -68,6 +68,18 @@ require_once("config.php");
         <li class="nav-item-active">
             <a class="nav-link" href="user-recipe.php">My Recipes</a>
         </li>
+        <li class="nav-item-active" style="padding-left:100px">
+            <a class="nav-link" href="entree.php">Entrees</a>
+        </li>
+        <li class="nav-item-active">
+            <a class="nav-link" href="appetizer.php">Appetizers</a>
+        </li>
+        <li class="nav-item-active">
+            <a class="nav-link" href="drink.php">Drinks</a>
+        </li>
+        <li class="nav-item-active">
+            <a class="nav-link" href="dessert.php">Desserts</a>
+        </li>
     </ul>
     <!-- <form class="form-inline">
     <input class="form-control mr-sm-2" type="search" placeholder="Look for recipes" aria-label="Search">
