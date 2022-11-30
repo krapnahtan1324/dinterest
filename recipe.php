@@ -97,7 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <input type="submit" value="Search"/>
 </form>
 </div>
-<br>
 
 
 <?php
@@ -112,9 +111,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
     <thead> <!-- For the table set up the header --> 
     <tr style="background-color:#B0B0B0">
-        <th width="30%"><b>Recipe_id</b></th>       
-        <th width="30%"><b>Name</b></th>      
-        <th width="30%"><b>Instructions</b></th>  
+        <th width="10%"><b>Recipe_id</b></th>       
+        <th width="20%"><b>Name</b></th>      
+        <th width="40%"><b>Instructions</b></th>
+        <th width="10%"></th>
     </tr>
     </thead>
 <?php
@@ -128,7 +128,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <tr class="recipe">
           <td><?php echo $recipe_info['recipe_id']; ?></td>
           <td><?php echo $recipe_info['recipe_name']; ?></td>        
-          <td><?php echo $recipe_info['instructions']; ?></td>  
+          <td><?php echo $recipe_info['instructions']; ?></td>
+          <td style="padding-left:20px;">
+            <form action="recipe.php" method="post">
+            <input type="submit" value="More Info" name="btnAction" class="btn btn-info"
+              title="Click to view more info" /> <!-- title attribute will display when mouse hovers over it -->
+            <input type="hidden" name="recipe_to_view" 
+              value="<?php echo $recipe_info['recipe_id']; ?>" />
+            </form>
+          </td>  
         </tr>
 
         <?php }
@@ -144,17 +152,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     unset($_POST["search"]);
     } else { ?>
-
+<!-- If user not searching -->
 <div class="showrecipe">
 <h3> List of Recipes</h3> 
 <div class="row justify-content-center">  
 <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
   <thead> <!-- For the table set up the header --> 
   <tr style="background-color:#B0B0B0">
-    <th width="30%"><b>Recipe_id</b></th>       
-    <th width="30%"><b>Name</b></th>      
-    <th width="30%"><b>Instructions</b></th>
-    <th><b></b></th>
+    <th width="10%"><b>Recipe_id</b></th>       
+    <th width="20%"><b>Name</b></th>      
+    <th width="40%"><b>Instructions</b></th>
+    <th width="10%"></th>
   </tr>
   </thead>
 
@@ -163,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <td><?php echo $recipe_info['recipe_id']; ?></td>
     <td><?php echo $recipe_info['recipe_name']; ?></td>        
     <td><?php echo $recipe_info['instructions']; ?></td>
-    <td>
+    <td style="padding-left:20px;">
       <form action="recipe.php" method="post">
       <input type="submit" value="More Info" name="btnAction" class="btn btn-info"
         title="Click to view more info" /> <!-- title attribute will display when mouse hovers over it -->
